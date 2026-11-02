@@ -257,7 +257,7 @@
     <label class="campo"><span>Senha</span><input type="password" id="senha" autocomplete="current-password" required></label>
     <button class="botao bloco" type="submit" id="btn-entrar">Entrar</button>
     <p class="dica esconde" id="aviso-endereco" style="margin:14px 0 0;text-align:center">Para ficar logado ao atualizar a página, use
-      <a href="https://painel-infinyt.oryxinternet.com.br/">painel-infinyt.oryxinternet.com.br</a></p>
+      <a href="https://infinyt.oryxinternet.com.br/">infinyt.oryxinternet.com.br</a></p>
   </form>
 </section>
 
@@ -624,7 +624,7 @@
 
 <script>
 (() => {
-  // No site da Infinyt (painel-infinyt.oryxinternet.com.br/) o navegador guarda o login; o n8n abre a página
+  // No site da Infinyt (infinyt.oryxinternet.com.br/) o navegador guarda o login; o n8n abre a página
   // numa caixa isolada que não guarda nada. Fora do n8n, a API fica no endereço da Infinyt.
   const NO_N8N = /\/webhook\//.test(location.pathname);
   const API = NO_N8N ? location.origin + '/webhook/painel-app-api' : 'https://n8n-infinytnet.dfnet.net.br/webhook/painel-app-api';
