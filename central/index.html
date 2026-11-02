@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Central do Assinante | Infinyt Net</title>
+<meta name="description" content="Central do Assinante Infinyt Net: 2ª via de boleto com Pix, desbloqueio de confiança, Wi-Fi, notas fiscais e suporte.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --navy:#0E2A5E; --navy-2:#1A3A75; --navy-3:#24212F;
+  --gold:#F47B20; --gold-bright:#FF9A4D; --gold-deep:#C25A0C; --gold-label:#A84B08;
+  --ground:#F4F7FB; --surface:#fff; --surface-2:#E9EEF6;
+  --ink:#0E2A5E; --ink-soft:#5B6882; --line:#E4E0EE;
+  --ok:#15803d; --ok-bg:#E5F6EC; --bad:#B42318; --bad-bg:#FDECEA; --warn:#B4500A; --warn-bg:#FFF1E0;
+  --wa:#1EA952; --radius:16px; --shadow:0 1px 2px rgba(14,42,94,.06),0 8px 24px rgba(14,42,94,.07);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ground);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.ttl{font-family:Poppins,Inter,sans-serif;letter-spacing:-.01em;margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+.wrap{width:100%;max-width:1240px;margin:0 auto;padding:0 24px}
+svg.i{width:20px;height:20px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+:focus-visible{outline:3px solid var(--gold-deep);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* topo */
+.top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.top .wrap{display:flex;align-items:center;gap:16px;height:72px}
+.brand img{height:44px;width:auto;display:block}
+.top .sep{width:1px;height:28px;background:var(--line)}
+.top .tag{font-family:Poppins;font-weight:600;font-size:15px;color:var(--ink-soft)}
+.top .esp{flex:1}
+.lnk{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:15px;color:var(--ink);padding:10px 12px;border-radius:10px;background:none;border:0}
+.lnk:hover{background:var(--surface-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:12px 20px;font-weight:700;font-size:15px;text-decoration:none;min-height:46px;transition:transform .12s,box-shadow .2s,background .2s}
+.btn:active{transform:scale(.98)}
+.btn-gold{background:var(--gold);color:#1c1600;box-shadow:0 6px 18px rgba(244,123,32,.28)}
+.btn-gold:hover{background:var(--gold-bright)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:var(--navy-2)}
+.btn-line{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn-line:hover{border-color:var(--navy)}
+.btn-wa{background:var(--wa);color:#fff}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn-sm{padding:8px 12px;min-height:38px;font-size:14px;border-radius:10px}
+
+/* login */
+.login{min-height:calc(100vh - 72px);display:grid;grid-template-columns:1.05fr 1fr}
+.login .hero{background:radial-gradient(1200px 500px at -10% -10%,rgba(244,123,32,.18),transparent 60%),linear-gradient(160deg,var(--navy) 0%,var(--navy-3) 100%);color:#fff;padding:72px 64px;display:flex;flex-direction:column;justify-content:center;gap:28px;position:relative;overflow:hidden}
+.login .hero:after{content:"";position:absolute;right:-120px;bottom:-120px;width:380px;height:380px;border-radius:50%;border:56px solid rgba(244,123,32,.12)}
+.hero .kicker{color:var(--gold);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:13px}
+.hero h1{font-size:44px;line-height:1.12;font-weight:800;max-width:520px}
+.hero h1 span{color:var(--gold)}
+.hero p{color:rgba(255,255,255,.78);font-size:18px;max-width:480px;margin:0}
+.bens{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:560px;position:relative;z-index:1}
+.bens li{display:flex;gap:12px;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;font-weight:600;font-size:15px}
+.bens li .bi{width:38px;height:38px;border-radius:10px;background:rgba(244,123,32,.16);color:var(--gold);display:flex;align-items:center;justify-content:center}
+.login .lado{display:flex;align-items:center;justify-content:center;padding:48px 24px}
+.cartao{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:36px;width:100%;max-width:460px}
+.cartao h2{font-size:26px;font-weight:700;margin-bottom:6px}
+.cartao .sub{color:var(--ink-soft);margin:0 0 24px}
+.campo{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.campo label,.rot{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+.inp{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:12px;background:#fff;transition:border-color .2s,box-shadow .2s}
+.inp:focus-within{border-color:var(--gold-deep);box-shadow:0 0 0 4px rgba(244,123,32,.18)}
+.inp input{flex:1;border:0;outline:0;background:none;font:inherit;font-size:16px;color:var(--ink);padding:13px 14px;min-width:0}
+.inp button{border:0;background:none;color:var(--ink-soft);padding:10px 14px}
+.alerta{display:flex;gap:10px;align-items:flex-start;border-radius:12px;padding:12px 14px;font-size:15px;margin-bottom:16px}
+.alerta.bad{background:var(--bad-bg);color:var(--bad)}
+.alerta.ok{background:var(--ok-bg);color:var(--ok)}
+.alerta.warn{background:var(--warn-bg);color:var(--warn)}
+.mini{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:12px;flex-wrap:wrap}
+.mini button{background:none;border:0;color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px;padding:6px 0}
+.primeiro{margin-top:22px;display:flex;align-items:center;gap:14px;background:var(--navy);color:#fff;border:0;border-radius:14px;padding:14px 16px;width:100%;text-align:left}
+.primeiro .bi{width:40px;height:40px;border-radius:10px;background:rgba(244,123,32,.18);color:var(--gold);display:flex;align-items:center;justify-content:center}
+.primeiro b{display:block;font-family:Poppins}
+.primeiro small{color:rgba(255,255,255,.75);font-size:14px}
+.seg{display:flex;gap:10px;margin-bottom:16px}
+.seg button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-weight:700;color:var(--ink)}
+.seg button[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* painel */
+.faixa{background:linear-gradient(160deg,var(--navy),var(--navy-3));color:#fff}
+.faixa .wrap{display:flex;align-items:center;gap:24px;padding-top:34px;padding-bottom:34px;flex-wrap:wrap}
+.faixa .ola{flex:1;min-width:260px}
+.faixa .ola small{color:rgba(255,255,255,.7);font-size:15px}
+.faixa h1{font-size:32px;font-weight:700}
+.faixa .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;white-space:nowrap}
+.chip.claro{background:rgba(255,255,255,.1);color:#fff}
+.chip.ok{background:var(--ok-bg);color:var(--ok)}
+.chip.bad{background:var(--bad-bg);color:var(--bad)}
+.chip.warn{background:var(--warn-bg);color:var(--warn)}
+.chip.gold{background:#FFF6D1;color:var(--gold-label)}
+.faixa select{font:inherit;font-weight:600;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;padding:12px 14px;min-height:46px;max-width:100%}
+.faixa select option{color:var(--ink)}
+.corpo{display:grid;grid-template-columns:260px 1fr;gap:28px;padding-top:28px;padding-bottom:56px;align-items:start}
+.menu{position:sticky;top:92px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:10px;display:flex;flex-direction:column;gap:2px;box-shadow:var(--shadow)}
+.menu button{display:flex;align-items:center;gap:12px;border:0;background:none;text-align:left;padding:12px 14px;border-radius:12px;font-weight:600;font-size:15px;color:var(--ink);min-height:48px}
+.menu button:hover{background:var(--surface-2)}
+.menu button[aria-current=page]{background:var(--navy);color:#fff}
+.menu button[aria-current=page] svg{color:var(--gold)}
+.menu hr{border:0;border-top:1px solid var(--line);margin:8px 6px}
+.menu .sair{color:var(--bad)}
+.conteudo{min-width:0}
+.cab{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.cab h2{font-size:26px;font-weight:700}
+.cab p{margin:4px 0 0;color:var(--ink-soft)}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+.grade{display:grid;gap:20px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.kpi .rot{margin-bottom:8px;display:block}
+.kpi .val{font-family:Poppins;font-size:28px;font-weight:700;line-height:1.2}
+.kpi .det{color:var(--ink-soft);font-size:14px;margin-top:6px}
+.kpi .ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.atalhos{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.atalho{display:flex;flex-direction:column;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;text-align:left;box-shadow:var(--shadow);transition:transform .15s,border-color .2s}
+.atalho:hover{transform:translateY(-2px);border-color:var(--gold-deep)}
+.atalho .ico{width:42px;height:42px;border-radius:12px;background:var(--navy);color:var(--gold);display:flex;align-items:center;justify-content:center}
+.atalho b{font-family:Poppins;font-size:15px}
+.atalho small{color:var(--ink-soft);font-size:14px;line-height:1.35}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--ground)}
+td{padding:16px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:15px}
+tr:last-child td{border-bottom:0}
+.tabela{padding:0;overflow:hidden}
+.acoes{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.num{font-family:Poppins;font-weight:700}
+.vazio{text-align:center;padding:40px 20px;color:var(--ink-soft)}
+.vazio svg{width:44px;height:44px;color:var(--ok);margin-bottom:10px}
+.cod{font-family:ui-monospace,Consolas,monospace;font-size:13px;word-break:break-all;background:var(--ground);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px}
+.det-boleto td{background:#FBFAFD}
+.osso{background:linear-gradient(90deg,var(--surface-2),#f6f4fa,var(--surface-2));background-size:200% 100%;animation:brilho 1.2s infinite;border-radius:8px;height:16px}
+@keyframes brilho{to{background-position:-200% 0}}
+.lista-dados{display:grid;grid-template-columns:repeat(2,1fr);gap:0}
+.lista-dados div{padding:14px 0;border-bottom:1px solid var(--line)}
+.lista-dados dt{font-size:13px;color:var(--ink-soft);font-weight:600}
+.lista-dados dd{margin:2px 0 0;font-weight:600}
+.canal{display:flex;align-items:center;gap:16px}
+.canal .ico{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.canal b{font-family:Poppins;display:block}
+.canal small{color:var(--ink-soft)}
+.canal .esp{flex:1}
+details{border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:10px}
+summary{padding:16px 18px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+details[open] summary{border-bottom:1px solid var(--line)}
+details p{margin:0;padding:14px 18px;color:var(--ink-soft)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;transition:.25s;z-index:50;display:flex;gap:8px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.rodape{border-top:1px solid var(--line);background:#fff;color:var(--ink-soft);font-size:14px}
+.rodape .wrap{display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap;padding-top:22px;padding-bottom:22px}
+.oculto{display:none!important}
+.fotos-ass{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.foto-card{aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;border:1.5px dashed var(--line);border-radius:14px;background:#fff center/cover no-repeat;cursor:pointer;font:inherit;font-size:13px;font-weight:600;color:var(--ink);padding:8px;position:relative;overflow:hidden}
+.foto-card:hover{border-color:var(--gold-deep)}
+.foto-card .fc-ico{width:38px;height:38px;border-radius:10px;background:var(--surface-2);color:var(--navy);display:flex;align-items:center;justify-content:center}
+.foto-card.feito{border:2px solid var(--ok)}
+.foto-card.feito .fc-ico,.foto-card.feito .fc-txt{display:none}
+.foto-card.feito:after{content:'✓';position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:var(--ok);color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center}
+@media (max-width:420px){.foto-card{font-size:12px}}
+
+@media (max-width:1080px){
+  .atalhos{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:1fr 1fr}
+}
+@media (max-width:900px){
+  .login{grid-template-columns:1fr}
+  .login .hero{padding:44px 24px}
+  .hero h1{font-size:32px}
+  .corpo{grid-template-columns:1fr;gap:18px;padding-top:0}
+  .menu{position:sticky;top:72px;flex-direction:row;overflow-x:auto;border-radius:0;margin:0 -24px;border-left:0;border-right:0;box-shadow:none;padding:8px 16px;scrollbar-width:none;z-index:10}
+  .menu button{white-space:nowrap;flex-shrink:0}
+  .menu hr{display:none}
+  .g3,.g2,.lista-dados{grid-template-columns:1fr}
+  .tabela thead{display:none}
+  .tabela tr{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:16px;border-bottom:1px solid var(--line)}
+  .tabela td{border:0;padding:0}
+  .tabela td.acoes-td{grid-column:1/-1;margin-top:10px}
+  .acoes{justify-content:flex-start}
+  .top .tag,.top .sep{display:none}
+}
+@media (max-width:560px){
+  .wrap{padding:0 16px}
+  .menu{margin:0 -16px}
+  .bens{grid-template-columns:1fr}
+  .atalhos{grid-template-columns:1fr 1fr}
+  .cartao{padding:24px 20px}
+  .top .lnk-site span{display:none}
+  .faixa h1{font-size:26px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Infinyt Net, voltar ao site"><img src="/assets/logo-dark.svg" alt="Infinyt Net" width="480" height="120"></a>
+    <span class="sep"></span><span class="tag">Central do Assinante</span>
+    <span class="esp"></span>
+    <a class="lnk lnk-site" href="/"><svg class="i" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg><span>Voltar ao site</span></a>
+    <a class="btn btn-wa btn-sm" id="topoWa" href="#" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>WhatsApp</a>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer class="rodape">
+  <div class="wrap">
+    <span>© Infinyt Net · Atendimento: <span id="rodHorario">Seg–Sex: 8h–19h • Sáb: 9h–16h</span></span>
+    <span id="rodTel">TROCAR_TELEFONE_COMO_APARECE</span>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* Central do Assinante (web). Usa os mesmos webhooks do app (n8n): o token do SGP fica no n8n.
+   A sessão fica só nesta aba (sessionStorage): fechou a aba, sai da conta. */
+const BASES=["https://n8n-infinytnet.dfnet.net.br/webhook","https://n8n-infinytnet.dfnet.net.br/webhook"];
+let BASE=BASES[0];
+const DEMO=/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]demo/.test(location.search);
+let CFG={whatsapp:"5561991853932",telefone:"5561991853932",telefone_exibir:"TROCAR_TELEFONE_COMO_APARECE",instagram:"infinytnet",
+  horario:"Seg–Sex: 8h–19h • Sáb: 9h–16h",endereco:"TROCAR_ENDERECO",faq:[],desligados:[]};
+const S={conta:null,ct:null,aba:"inicio",cache:{}};
+
+/* ---------- utilidades ---------- */
+const $=s=>document.querySelector(s);
+const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const dig=v=>String(v||"").replace(/\D/g,"");
+const fmtDoc=v=>{const d=dig(v).slice(0,14);return d.length<=11?d.replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d{1,2})$/,"$1-$2"):d.replace(/(\d{2})(\d)/,"$1.$2").replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d)/,"$1/$2").replace(/(\d{4})(\d{1,2})$/,"$1-$2");};
+const fmtZap=v=>{const d=dig(v).slice(0,11);return d.length<=2?d:d.length<=7?`(${d.slice(0,2)}) ${d.slice(2)}`:`(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;};
+const MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const parseData=v=>{const s=String(v||"").trim();let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return new Date(+m[1],+m[2]-1,+m[3]);m=s.match(/^(\d{2})\/(\d{2})\/(\d{4})/);if(m)return new Date(+m[3],+m[2]-1,+m[1]);return null;};
+const fmtData=v=>{const d=parseData(v);if(!d)return v||"—";const p=n=>String(n).padStart(2,"0");return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()}`;};
+const fmtValor=v=>{if(v==null||v==="")return "R$ —";let s=String(v).replace(/r\$/i,"").trim();if(/,\d{1,2}$/.test(s))s=s.replace(/\./g,"").replace(",",".");const n=Number(s);return isNaN(n)?"R$ "+String(v):n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});};
+const waLink=m=>`https://wa.me/${CFG.whatsapp}`+(m?`?text=${encodeURIComponent(m)}`:"");
+const ligado=k=>!(CFG.desligados||[]).includes(k);
+const toast=(t)=>{const e=$("#toast");e.innerHTML=ic("check")+esc(t);e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),2200);};
+const copiar=async(t,msg)=>{try{await navigator.clipboard.writeText(t);}catch(e){const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();}toast(msg||"Copiado!");};
+
+const P={
+ inicio:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+ cartao:'<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/>',
+ destravar:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.9-1"/>',
+ cadeado:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+ wifi:'<path d="M5 12.55a11 11 0 0 1 14 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/>',
+ recibo:'<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/>',
+ caneta:'<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+ chat:'<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/>',
+ telefone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+ sair:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
+ alerta:'<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+ ok:'<path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><polyline points="22 4 12 14 9 11"/>',
+ check:'<polyline points="20 6 9 17 4 12"/>',
+ copiar:'<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+ pix:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/>',
+ documento:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
+ info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+ local:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+ olho:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+ seta:'<polyline points="9 18 15 12 9 6"/>',
+ raio:'<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+ calendario:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+ baixar:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+};
+const ic=(n,st="")=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="${st}">${P[n]||""}</svg>`;
+
+/* ---------- API ---------- */
+let sessao=sessionStorage.getItem("infinyt_web_sessao")||"";
+const demo=(path)=>new Promise(ok=>setTimeout(()=>ok(({
+  "app-login":{ok:true,sessao:"demo",nome:"Maria Souza",contratos:[{contratoId:"1234",clienteId:"77",plano:"FIBRA 700 MEGA",status:"Ativo",vencimento:10,valorAberto:"99,90",titulos:1,pendencia:true,termoAssinado:false,termoUrl:"https://infinyt.com.br",termoPdf:"https://infinyt.com.br",cidade:"Brasília/DF"},{contratoId:"1290",clienteId:"77",plano:"FIBRA 500 MEGA",status:"Ativo",vencimento:20,valorAberto:null,titulos:0,termoAssinado:true}]},
+  "app-boletos":{boletos:[{venc:"2026-11-10",valor:"99.90",status:"aberto",linha:"00190.00009 01234.560005 61237.100000 2 00000000009990",pix:"00020126360014br.gov.bcb.pix0114+556199185393252040000",link:"https://infinyt.com.br"},{venc:"2026-10-10",valor:"99.90",status:"pago"},{venc:"2026-09-10",valor:"99.90",status:"pago"}]},
+  "app-notas":{notas:[{numero:"5531",id:"1",data_emissao:"2026-10-01",status:"1",serie:"1"}]},
+  "app-wifi-get":{ok:true,redes:[{band:"2.4 GHz",ssid:"INFINYT-Maria"},{band:"5 GHz",ssid:"INFINYT-Maria_5G"}]},
+  "app-desbloqueio":{ok:true,mensagem:"Sua conexão foi liberada.",liberado_dias:2},
+  "app-recuperar-senha":{ok:true,mensagem:"Pronto! Enviamos sua senha no WhatsApp cadastrado."},
+  "app-assinar-contrato":{ok:true,mensagem:"Contrato assinado com sucesso!"},
+}[path])||{ok:true}),700));
+async function api(path,body){
+  if(DEMO)return demo(path);
+  const ir=async(base)=>{const r=await fetch(`${base}/${path}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...(body||{}),...(sessao?{sessao}:{})})});
+    if(r.status===401&&path!=="app-login"){sair("Sua sessão expirou. Entre novamente.");throw new Error("sessao");}
+    if(!r.ok)throw new Error("HTTP "+r.status);return r.json();};
+  try{return await ir(BASE);}catch(e){if(e.message==="sessao")throw e;const outro=BASES.find(b=>b!==BASE);BASE=outro;return ir(outro);}
+}
+async function carregarConfig(){
+  if(DEMO)return;
+  for(const b of BASES){try{const r=await fetch(`${b}/app-config`,{cache:"no-store"});const d=await r.json();if(d&&d.ok){BASE=b;CFG={...CFG,...(d.config||{})};break;}}catch(e){}}
+  $("#topoWa").href=waLink("Olá! Vim pela Central do Assinante.");
+  $("#rodHorario").textContent=CFG.horario; $("#rodTel").textContent=CFG.telefone_exibir;
+}
+
+/* ---------- login / senha ---------- */
+function telaLogin(aviso){
+  S.conta=null;
+  $("#app").innerHTML=`
+  <section class="login">
+    <div class="hero">
+      <span class="kicker">Central do Assinante</span>
+      <h1>Sua internet Infinyt, <span>na palma da mão</span>.</h1>
+      <p>Pague sua fatura com Pix, libere sua conexão e cuide do seu Wi-Fi sem precisar ligar.</p>
+      <ul class="bens">
+        <li><span class="bi">${ic("pix")}</span>2ª via com Pix</li>
+        <li><span class="bi">${ic("destravar")}</span>Desbloqueio na hora</li>
+        <li><span class="bi">${ic("wifi")}</span>Nome e senha do Wi-Fi</li>
+        <li><span class="bi">${ic("recibo")}</span>Notas fiscais</li>
+      </ul>
+    </div>
+    <div class="lado"><div class="cartao" id="cartaoLogin">
+      <h2>Entrar na sua conta</h2>
+      <p class="sub">Use o CPF ou CNPJ do titular e a sua senha.</p>
+      <div id="loginAviso">${aviso?`<div class="alerta warn" role="alert">${ic("alerta")}<span>${esc(aviso)}</span></div>`:""}</div>
+      <form id="fLogin" novalidate>
+        <div class="campo"><label for="lDoc">CPF ou CNPJ</label><div class="inp"><input id="lDoc" inputmode="numeric" autocomplete="username" placeholder="000.000.000-00" required></div></div>
+        <div class="campo"><label for="lSenha">Senha</label><div class="inp"><input id="lSenha" type="password" autocomplete="current-password" placeholder="Sua senha" required><button type="button" id="verSenha" aria-label="Mostrar senha">${ic("olho")}</button></div></div>
+        <button class="btn btn-gold" style="width:100%" id="bEntrar" type="submit">Entrar</button>
+      </form>
+      <div class="mini"><button type="button" id="bEsqueci">Esqueci minha senha</button><a class="lnk" style="padding:6px 0" href="${waLink("Olá! Preciso de ajuda para entrar na Central do Assinante.")}" target="_blank" rel="noopener">Precisa de ajuda?</a></div>
+      <button class="primeiro" type="button" id="bPrimeiro"><span class="bi">${ic("cadeado")}</span><span style="flex:1"><b>Primeiro acesso?</b><small>Crie sua senha em 1 minuto</small></span>${ic("seta","color:var(--gold)")}</button>
+    </div></div>
+  </section>`;
+  const doc=$("#lDoc"),sen=$("#lSenha");
+  doc.addEventListener("input",()=>{doc.value=fmtDoc(doc.value);});
+  $("#verSenha").onclick=()=>{sen.type=sen.type==="password"?"text":"password";};
+  $("#bEsqueci").onclick=$("#bPrimeiro").onclick=()=>telaSenha();
+  $("#fLogin").onsubmit=async(e)=>{
+    e.preventDefault();
+    const c=dig(doc.value),s=sen.value;const av=$("#loginAviso");
+    if(c.length!==11&&c.length!==14){av.innerHTML=`<div class="alerta bad" role="alert">${ic("alerta")}<span>CPF ou CNPJ inválido.</span></div>`;return;}
+    if(!s.trim()){av.innerHTML=`<div class="alerta bad" role="alert">${ic("alerta")}<span>Digite sua senha.</span></div>`;return;}
+    const b=$("#bEntrar");b.disabled=true;b.textContent="Entrando…";av.innerHTML="";
+    try{
+      const d=await api("app-login",{cpf:c,senha:s});
+      let contratos=null;
+      if(d&&d.ok===false&&d.motivo==="senha_incorreta"){av.innerHTML=`<div class="alerta bad" role="alert">${ic("alerta")}<span>Senha incorreta. Confira e tente de novo.</span></div>`;}
+      else if(d&&d.ok!==false&&Array.isArray(d.contratos)&&d.contratos.length)contratos=d.contratos;
+      else if(d&&d.ok!==false&&(d.contratoId||d.nome))contratos=[{contratoId:d.contratoId,clienteId:d.clienteId,plano:d.plano,status:d.status,vencimento:d.vencimento,valorAberto:d.valorAberto,titulos:d.titulos,pendencia:d.pendencia,termoAssinado:d.termoAssinado,termoUrl:d.termoUrl,termoPdf:d.termoPdf}];
+      else av.innerHTML=`<div class="alerta bad" role="alert">${ic("alerta")}<span>CPF/CNPJ não encontrado. Confira e tente de novo.</span></div>`;
+      if(contratos){
+        sessao=d.sessao||"";sessionStorage.setItem("infinyt_web_sessao",sessao);
+        S.conta={cpf:c,nome:d.nome||"Cliente",contratos};
+        sessionStorage.setItem("infinyt_web_conta",JSON.stringify(S.conta));
+        S.ct=contratos[0];S.cache={};abrirPainel("inicio");return;
+      }
+    }catch(err){if(err.message!=="sessao")av.innerHTML=`<div class="alerta bad" role="alert">${ic("alerta")}<span>Sem conexão com o servidor. Tente novamente.</span></div>`;}
+    b.disabled=false;b.textContent="Entrar";
+  };
+  doc.focus();
+}
+function telaSenha(){
+  const box=$("#cartaoLogin");let tipo="whatsapp";
+  const desenhar=()=>{box.innerHTML=`
+    <button class="lnk" style="padding:6px 0;margin-bottom:10px" id="bVolta">${ic("seta","transform:rotate(180deg)")}Voltar para o login</button>
+    <h2>Criar ou recuperar senha</h2>
+    <p class="sub">Primeiro acesso ou esqueceu a senha? Enviamos uma nova para você agora.</p>
+    <div id="sAviso"></div>
+    <form id="fSenha" novalidate>
+      <div class="campo"><label for="sDoc">CPF ou CNPJ do titular</label><div class="inp"><input id="sDoc" inputmode="numeric" placeholder="Só os números"></div></div>
+      <span class="rot" style="display:block;margin-bottom:8px">Receber a senha por</span>
+      <div class="seg"><button type="button" data-t="whatsapp" aria-pressed="${tipo==="whatsapp"}">${ic("chat")}WhatsApp</button><button type="button" data-t="email" aria-pressed="${tipo==="email"}">${ic("documento")}E-mail</button></div>
+      <div class="campo">${tipo==="whatsapp"
+        ?`<label for="sCont">WhatsApp cadastrado</label><div class="inp"><input id="sCont" type="tel" inputmode="tel" placeholder="(61) 99999-9999"></div>`
+        :`<label for="sCont">E-mail cadastrado</label><div class="inp"><input id="sCont" type="email" autocapitalize="none" placeholder="voce@email.com"></div>`}</div>
+      <p style="color:var(--ink-soft);font-size:14px;margin:-6px 0 16px">Use o mesmo ${tipo==="whatsapp"?"número":"e-mail"} que você informou na contratação.</p>
+      <button class="btn btn-gold" style="width:100%" id="bEnviar" type="submit">${ic("cadeado")}Enviar minha senha</button>
+    </form>
+    <div class="mini"><span style="color:var(--ink-soft);font-size:14px">Mudou de número ou e-mail?</span><a class="btn btn-wa btn-sm" href="${waLink("Olá! Preciso de ajuda para criar/recuperar minha senha da Central do Assinante.")}" target="_blank" rel="noopener">${ic("chat")}Falar no WhatsApp</a></div>`;
+    $("#bVolta").onclick=()=>telaLogin();
+    box.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{const v=$("#sDoc").value;tipo=b.dataset.t;desenhar();$("#sDoc").value=v;});
+    const d=$("#sDoc"),k=$("#sCont");
+    d.addEventListener("input",()=>{d.value=fmtDoc(d.value);});
+    if(tipo==="whatsapp")k.addEventListener("input",()=>{k.value=fmtZap(k.value);});
+    $("#fSenha").onsubmit=async(e)=>{
+      e.preventDefault();const av=$("#sAviso");const cpf=dig(d.value);
+      const okC=tipo==="email"?/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(k.value.trim()):dig(k.value).length>=10;
+      if(cpf.length!==11&&cpf.length!==14){av.innerHTML=`<div class="alerta bad">${ic("alerta")}<span>CPF ou CNPJ inválido.</span></div>`;return;}
+      if(!okC){av.innerHTML=`<div class="alerta bad">${ic("alerta")}<span>${tipo==="email"?"Digite um e-mail válido.":"Digite o WhatsApp com DDD."}</span></div>`;return;}
+      const b=$("#bEnviar");b.disabled=true;b.textContent="Enviando…";
+      try{const r=await api("app-recuperar-senha",{cpf,tipo,email:tipo==="email"?k.value.trim():"",contato:tipo==="whatsapp"?dig(k.value):""});
+        if(r&&r.ok){box.innerHTML=`<div style="text-align:center"><div style="width:76px;height:76px;border-radius:50%;background:var(--ok-bg);color:var(--ok);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">${ic("ok","width:36px;height:36px")}</div><h2>Senha enviada!</h2><p class="sub" style="margin-top:8px">${esc(r.mensagem)}</p><button class="btn btn-gold" style="width:100%" id="bIrLogin">Ir para o login</button></div>`;$("#bIrLogin").onclick=()=>telaLogin();return;}
+        av.innerHTML=`<div class="alerta bad" role="alert">${ic("alerta")}<span>${esc((r&&r.mensagem)||"Não foi possível enviar agora.")}</span></div>`;
+      }catch(err){av.innerHTML=`<div class="alerta bad" role="alert">${ic("alerta")}<span>Sem conexão com o servidor. Tente novamente.</span></div>`;}
+      b.disabled=false;b.innerHTML=`${ic("cadeado")}Enviar minha senha`;
+    };
+  };
+  desenhar();$("#sDoc").focus();
+}
+function sair(aviso){sessao="";sessionStorage.removeItem("infinyt_web_sessao");sessionStorage.removeItem("infinyt_web_conta");S.cache={};telaLogin(aviso);}
+
+/* ---------- painel ---------- */
+const ABAS=[["inicio","Início","inicio"],["boletos","2ª via de boleto","cartao"],["desbloqueio","Desbloqueio de confiança","destravar"],["wifi","Meu Wi-Fi","wifi"],["notas","Notas fiscais","recibo"],["contrato","Meu contrato","caneta"],["suporte","Suporte","chat"]];
+const bloqueado=ct=>/(inativ|bloqu|suspens|cancel|desativ|cortad)/i.test(String(ct.status||""));
+const pendente=ct=>(ct.titulos>0)&&parseFloat(String(ct.valorAberto||"0").replace(/\./g,"").replace(",","."))>0;
+function abrirPainel(aba){
+  S.aba=aba||S.aba;const ct=S.ct,c=S.conta;const prim=(c.nome||"Cliente").split(" ")[0];
+  const st=bloqueado(ct)?`<span class="chip bad">${ic("alerta","width:14px;height:14px")}${esc(ct.status)}</span>`:`<span class="chip ok">${ic("check","width:14px;height:14px")}Conexão ativa</span>`;
+  $("#app").innerHTML=`
+  <section class="faixa"><div class="wrap">
+    <div class="ola"><small>Olá,</small><h1>${esc(prim)}!</h1>
+      <div class="meta">${st}<span class="chip claro">${esc(ct.plano||"Internet")}</span><span class="chip claro">Contrato #${esc(ct.contratoId)}</span>${ct.vencimento?`<span class="chip claro">Vence dia ${esc(ct.vencimento)}</span>`:""}</div></div>
+    ${c.contratos.length>1?`<label class="oculto" for="selCt">Contrato</label><select id="selCt" aria-label="Escolher contrato">${c.contratos.map((x,i)=>`<option value="${i}" ${x===ct?"selected":""}>${esc(x.plano||"Contrato")} · #${esc(x.contratoId)}</option>`).join("")}</select>`:""}
+  </div></section>
+  <div class="wrap corpo">
+    <nav class="menu" aria-label="Seções da Central">
+      ${ABAS.filter(([k])=>k==="inicio"||k==="suporte"||ligado(k==="boletos"?"boleto":k)).map(([k,t,i])=>`<button data-aba="${k}" ${S.aba===k?'aria-current="page"':""}>${ic(i)}${t}</button>`).join("")}
+      <hr><button class="sair" id="bSair">${ic("sair")}Sair</button>
+    </nav>
+    <section class="conteudo" id="conteudo" tabindex="-1"></section>
+  </div>`;
+  document.querySelectorAll(".menu [data-aba]").forEach(b=>b.onclick=()=>{abrirPainel(b.dataset.aba);$("#conteudo").focus({preventScroll:true});if(innerWidth<900)window.scrollTo({top:$(".faixa").offsetHeight,behavior:"smooth"});});
+  $("#bSair").onclick=()=>sair();
+  const sel=$("#selCt");if(sel)sel.onchange=()=>{S.ct=c.contratos[+sel.value];S.cache={};abrirPainel(S.aba);};
+  ({inicio:vInicio,boletos:vBoletos,desbloqueio:vDesbloqueio,wifi:vWifi,notas:vNotas,contrato:vContrato,suporte:vSuporte}[S.aba]||vInicio)();
+}
+const esqueleto=(n=3)=>`<div class="card tabela">${Array.from({length:n}).map(()=>`<div style="padding:20px 24px;border-bottom:1px solid var(--line);display:flex;gap:20px;align-items:center"><div class="osso" style="width:28%"></div><div class="osso" style="width:18%"></div><div class="osso" style="width:14%"></div><div style="flex:1"></div><div class="osso" style="width:120px;height:34px"></div></div>`).join("")}</div>`;
+const erroBox=(t)=>`<div class="card vazio" style="color:var(--bad)">${ic("alerta","width:40px;height:40px;color:var(--bad)")}<p style="margin:8px 0 0;font-weight:600">${esc(t)}</p></div>`;
+async function dado(chave,fn){if(S.cache[chave]!==undefined)return S.cache[chave];const v=await fn();S.cache[chave]=v;return v;}
+const montarBoletos=d=>{const hoje=new Date();hoje.setHours(0,0,0,0);return((d&&(d.boletos||d.titulos))||[]).map(b=>{const venc=b.venc||b.dataVencimento||b.data_vencimento||"";const dt=parseData(venc);const pago=/pago|quit/i.test(b.status||"");const vencido=!pago&&dt&&dt<hoje;
+  return{mes:dt?`${MESES[dt.getMonth()]} ${dt.getFullYear()}`:(b.mes||b.competencia||fmtData(venc)),venc:fmtData(venc),valor:fmtValor(b.valor),status:pago?"pago":(vencido?"vencido":"aberto"),
+  linha:b.linha||b.linhaDigitavel||b.codigo_barras||"",pix:b.pix||b.codigoPix||b.codigo_pix||b.pixCopiaECola||b.pix_copia_cola||b.qrcode||b.qr_code||b.emv||b.brcode||"",link:b.link||b.link_cobranca||""};});};
+const chipSt=s=>s==="pago"?`<span class="chip ok">Pago</span>`:s==="vencido"?`<span class="chip bad">Vencido</span>`:`<span class="chip gold">Em aberto</span>`;
+const pegaBoletos=()=>dado("boletos",async()=>montarBoletos(await api("app-boletos",{cpf:S.conta.cpf,contrato:S.ct.contratoId})));
+
+function vInicio(){
+  const ct=S.ct,el=$("#conteudo");const pend=pendente(ct),bloq=bloqueado(ct);
+  el.innerHTML=`
+  <div class="cab"><div><h2>Resumo da sua conta</h2><p>Tudo o que importa do seu contrato em um só lugar.</p></div></div>
+  <div class="grade g3" style="margin-bottom:24px">
+    <div class="card kpi"><div class="ico" style="background:${bloq?"var(--bad-bg)":"var(--ok-bg)"};color:${bloq?"var(--bad)":"var(--ok)"}">${ic(bloq?"alerta":"ok")}</div><span class="rot">Situação</span><div class="val">${bloq?esc(ct.status):"Ativa"}</div><div class="det">${bloq?"Regularize para reativar sua conexão.":"Sua internet está funcionando."}</div></div>
+    <div class="card kpi"><div class="ico" style="background:${pend?"var(--warn-bg)":"var(--ok-bg)"};color:${pend?"var(--warn)":"var(--ok)"}">${ic("cartao")}</div><span class="rot">Fatura em aberto</span><div class="val">${pend?fmtValor(ct.valorAberto):"Em dia"}</div><div class="det">${pend?(ct.vencimento?`Vencimento dia ${esc(ct.vencimento)}`:"Pague com Pix na 2ª via"):"Nenhuma fatura pendente."}</div></div>
+    <div class="card kpi"><div class="ico" style="background:var(--surface-2);color:var(--navy)">${ic("raio")}</div><span class="rot">Seu plano</span><div class="val" style="font-size:22px">${esc(ct.plano||"Internet")}</div><div class="det">Contrato #${esc(ct.contratoId)}${ct.cidade?` · ${esc(ct.cidade)}`:""}</div></div>
+  </div>
+  ${pend?`<div class="alerta warn" style="margin-bottom:24px;align-items:center">${ic("alerta")}<span style="flex:1"><b>Você tem fatura em aberto.</b> Pague com Pix e a baixa é automática.</span><button class="btn btn-gold btn-sm" data-ir="boletos">${ic("pix")}Pagar agora</button></div>`:""}
+  ${!ct.termoAssinado&&ligado("contrato")?`<div class="alerta warn" style="margin-bottom:24px;align-items:center">${ic("caneta")}<span style="flex:1"><b>Seu termo de adesão está pendente.</b> Assine em poucos minutos.</span><button class="btn btn-navy btn-sm" data-ir="contrato">Assinar</button></div>`:""}
+  <h3 style="font-size:18px;margin:0 0 14px">Acesso rápido</h3>
+  <div class="atalhos">
+    ${[["boletos","cartao","2ª via de boleto","Pix copia e cola, código de barras e PDF"],["desbloqueio","destravar","Desbloqueio de confiança","Libere a internet enquanto regulariza"],["wifi","wifi","Meu Wi-Fi","Troque o nome e a senha da sua rede"],["suporte","chat","Falar com a Infinyt","WhatsApp, telefone e dúvidas"]]
+      .filter(([k])=>k==="suporte"||ligado(k==="boletos"?"boleto":k)).map(([k,i,t,s])=>`<button class="atalho" data-ir="${k}"><span class="ico">${ic(i)}</span><b>${t}</b><small>${s}</small></button>`).join("")}
+  </div>`;
+  el.querySelectorAll("[data-ir]").forEach(b=>b.onclick=()=>abrirPainel(b.dataset.ir));
+}
+
+async function vBoletos(){
+  const el=$("#conteudo");
+  el.innerHTML=`<div class="cab"><div><h2>2ª via de boleto</h2><p>Contrato #${esc(S.ct.contratoId)} · copie o Pix ou o código de barras.</p></div></div><div id="lb">${esqueleto(3)}</div>`;
+  let lista;try{lista=await pegaBoletos();}catch(e){if(e.message!=="sessao")$("#lb").innerHTML=erroBox("Não foi possível carregar seus boletos. Tente de novo em instantes.");return;}
+  if(!$("#lb"))return;
+  if(!lista.length){$("#lb").innerHTML=`<div class="card vazio">${ic("ok")}<p class="ttl" style="font-size:18px;color:var(--ink);margin:0">Conta em dia!</p><p style="margin:4px 0 0">Nenhum boleto em aberto.</p></div>`;return;}
+  $("#lb").innerHTML=`<div class="card tabela"><table><thead><tr><th>Competência</th><th>Vencimento</th><th>Valor</th><th>Status</th><th style="text-align:right">Ações</th></tr></thead><tbody>
+    ${lista.map((b,i)=>`<tr><td><b>${esc(b.mes)}</b></td><td>${esc(b.venc)}</td><td class="num">${esc(b.valor)}</td><td>${chipSt(b.status)}</td>
+      <td class="acoes-td"><div class="acoes">${b.status==="pago"?`<span style="color:var(--ink-soft);font-size:14px">Quitado</span>`:`
+        ${b.pix?`<button class="btn btn-gold btn-sm" data-pix="${i}">${ic("pix")}Copiar Pix</button>`:""}
+        ${b.linha?`<button class="btn btn-line btn-sm" data-linha="${i}">${ic("copiar")}Código de barras</button>`:""}
+        ${b.link?`<a class="btn btn-line btn-sm" href="${esc(b.link)}" target="_blank" rel="noopener">${ic("documento")}PDF</a>`:""}`}</div></td></tr>`).join("")}
+  </tbody></table></div>
+  <p style="color:var(--ink-soft);font-size:14px;margin-top:14px;display:flex;gap:8px;align-items:center">${ic("info","width:16px;height:16px")}Pagou com Pix? A baixa acontece em poucos minutos. Boleto pode levar até 3 dias úteis.</p>`;
+  $("#lb").querySelectorAll("[data-pix]").forEach(b=>b.onclick=()=>copiar(lista[+b.dataset.pix].pix,"Pix copiado! Cole no app do seu banco."));
+  $("#lb").querySelectorAll("[data-linha]").forEach(b=>b.onclick=()=>copiar(lista[+b.dataset.linha].linha,"Código de barras copiado!"));
+}
+
+function vDesbloqueio(){
+  const ct=S.ct,el=$("#conteudo");
+  el.innerHTML=`<div class="cab"><div><h2>Desbloqueio de confiança</h2><p>Libere sua internet por alguns dias enquanto regulariza o pagamento.</p></div></div>
+  <div class="grade g2">
+    <div class="card"><h3 style="font-size:18px;margin-bottom:10px;display:flex;gap:10px;align-items:center">${ic("destravar")}Como funciona</h3>
+      <ul style="margin:0;padding-left:20px;color:var(--ink-soft);display:grid;gap:8px"><li>A conexão é liberada na hora, sem precisar falar com atendente.</li><li>Vale por alguns dias (normalmente 2). Pague a fatura nesse prazo.</li><li>Se a fatura não for paga, a conexão volta a ser bloqueada.</li></ul></div>
+    <div class="card" id="dbBox"><h3 style="font-size:18px;margin-bottom:14px">Seu contrato</h3>
+      <dl class="lista-dados" style="grid-template-columns:1fr;margin:0 0 18px"><div><dt>Plano</dt><dd>${esc(ct.plano||"Internet")}</dd></div><div><dt>Contrato</dt><dd>#${esc(ct.contratoId)}</dd></div><div><dt>Situação</dt><dd>${esc(ct.status||"Ativo")}</dd></div></dl>
+      <button class="btn btn-gold" style="width:100%" id="bLibera">${ic("destravar")}Liberar minha conexão</button></div>
+  </div>`;
+  $("#bLibera").onclick=async()=>{const b=$("#bLibera");b.disabled=true;b.textContent="Liberando…";let r;
+    try{r=await api("app-desbloqueio",{contrato:ct.contratoId});}catch(e){if(e.message==="sessao")return;r={ok:false,mensagem:"Não foi possível concluir. Tente novamente."};}
+    const ok=r&&(r.ok===true||r.liberado===true||r.status===1);
+    $("#dbBox").innerHTML=`<div style="text-align:center;padding:10px 0"><div style="width:72px;height:72px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;background:${ok?"var(--ok-bg)":"var(--bad-bg)"};color:${ok?"var(--ok)":"var(--bad)"}">${ic(ok?"destravar":"alerta","width:34px;height:34px")}</div>
+      <h3 style="font-size:22px">${ok?"Conexão liberada!":"Não foi possível liberar"}</h3><p style="color:var(--ink-soft)">${esc(r.mensagem||r.msg||(ok?"Sua conexão foi liberada.":"Fale com a gente no WhatsApp."))}</p>
+      ${ok?`<div class="alerta warn" style="text-align:left">${ic("info")}<span>Vale por <b>${esc(r.liberado_dias||2)} dias</b>${r.data_promessa?` (até ${esc(r.data_promessa)})`:""}. Pague a fatura para não bloquear de novo.</span></div><button class="btn btn-gold" data-ir="boletos">${ic("pix")}Ver meus boletos</button>`
+        :`<a class="btn btn-wa" href="${waLink("Olá! Tentei o desbloqueio de confiança pela Central e não consegui.")}" target="_blank" rel="noopener">${ic("chat")}Falar no WhatsApp</a>`}</div>`;
+    const ir=$("#dbBox [data-ir]");if(ir)ir.onclick=()=>abrirPainel("boletos");};
+}
+
+async function vWifi(){
+  const el=$("#conteudo");
+  el.innerHTML=`<div class="cab"><div><h2>Meu Wi-Fi</h2><p>Veja e altere o nome e a senha da sua rede, de onde estiver.</p></div></div><div id="wb">${esqueleto(2)}</div>`;
+  let d;try{d=await api("app-wifi-get",{cpf:S.conta.cpf,contrato:S.ct.contratoId});if(!d||d.ok===false||!Array.isArray(d.redes))throw new Error("x");}
+  catch(e){if(e.message==="sessao")return;if($("#wb"))$("#wb").innerHTML=erroBox("Não conseguimos falar com o seu roteador agora. Tente de novo em instantes ou fale com o suporte.");return;}
+  if(!$("#wb"))return;
+  $("#wb").innerHTML=`<div class="grade g2">
+    <div class="card"><h3 style="font-size:18px;margin-bottom:6px">Suas redes</h3><p style="color:var(--ink-soft);margin:0 0 10px;font-size:15px">Por segurança, a senha atual não é exibida.</p>
+      ${d.redes.map(r=>`<div style="display:flex;gap:14px;align-items:center;padding:14px 0;border-top:1px solid var(--line)"><span style="width:42px;height:42px;border-radius:12px;background:var(--navy);color:var(--gold);display:flex;align-items:center;justify-content:center">${ic("wifi")}</span><span><small style="color:var(--ink-soft);font-weight:600">Rede ${esc(r.band)}</small><br><b>${esc(r.ssid||"—")}</b></span></div>`).join("")}</div>
+    <div class="card"><h3 style="font-size:18px;margin-bottom:6px">Alterar nome e senha</h3><p style="color:var(--ink-soft);margin:0 0 16px;font-size:15px">O nome vira <b>INFINYT-</b>seu-nome (a rede 5G ganha <b>_5G</b>). A troca leva até 1 minuto.</p>
+      <div id="wAviso"></div>
+      <form id="fWifi" novalidate>
+        <div class="campo"><label for="wNome">Novo nome (opcional)</label><div class="inp"><input id="wNome" maxlength="32" placeholder="Ex.: Casa da Ana"></div></div>
+        <div class="campo"><label for="wSenha">Nova senha</label><div class="inp"><input id="wSenha" type="password" maxlength="63" placeholder="Mínimo 8 caracteres" autocomplete="new-password"><button type="button" id="wVer" aria-label="Mostrar senha">${ic("olho")}</button></div></div>
+        <button class="btn btn-gold" style="width:100%" id="bWifi" type="submit">Salvar alterações</button>
+      </form></div></div>`;
+  $("#wVer").onclick=()=>{const s=$("#wSenha");s.type=s.type==="password"?"text":"password";};
+  $("#fWifi").onsubmit=async(e)=>{e.preventDefault();const n=$("#wNome").value.trim(),s=$("#wSenha").value,av=$("#wAviso");
+    if(s.trim().length<8){av.innerHTML=`<div class="alerta bad">${ic("alerta")}<span>A senha deve ter no mínimo 8 caracteres.</span></div>`;return;}
+    const b=$("#bWifi");b.disabled=true;b.textContent="Enviando…";
+    try{const r=await api("app-wifi-set",{cpf:S.conta.cpf,contrato:S.ct.contratoId,novo_nome:n||null,nova_senha:s});if(r&&r.ok===false)throw new Error(r.mensagem||r.error||"");
+      av.innerHTML=`<div class="alerta ok">${ic("ok")}<span>Pedido enviado! Em até 1 minuto a rede muda. Depois reconecte seus aparelhos com o novo nome e senha.</span></div>`;$("#fWifi").reset();}
+    catch(err){if(err.message!=="sessao")av.innerHTML=`<div class="alerta bad">${ic("alerta")}<span>Não deu para alterar agora. Tente de novo em instantes.</span></div>`;}
+    b.disabled=false;b.textContent="Salvar alterações";};
+}
+
+async function vNotas(){
+  const el=$("#conteudo");
+  el.innerHTML=`<div class="cab"><div><h2>Notas fiscais</h2><p>Notas emitidas no contrato #${esc(S.ct.contratoId)}.</p></div></div><div id="nb">${esqueleto(2)}</div>`;
+  let lista;try{lista=await dado("notas",async()=>{const d=await api("app-notas",{cpf:S.conta.cpf,contrato:S.ct.contratoId});return(d.notas||d.results||d.list||[]).map(n=>({numero:n.numero||n.id,id:n.id,data:n.data_emissao||n.data||"",status:String(n.status),serie:n.serie||""}));});}
+  catch(e){if(e.message!=="sessao"&&$("#nb"))$("#nb").innerHTML=erroBox("Não foi possível carregar suas notas.");return;}
+  if(!$("#nb"))return;
+  const st={"1":"Autorizada","3":"Em digitação","5":"Rejeitada","8":"Cancelada","9":"Importada","10":"Aguardando","11":"Substituída"};
+  if(!lista.length){$("#nb").innerHTML=`<div class="card vazio">${ic("recibo","width:40px;height:40px;color:var(--ink-soft)")}<p style="margin:6px 0 0">Nenhuma nota fiscal emitida ainda.</p></div>`;return;}
+  $("#nb").innerHTML=`<div class="card tabela"><table><thead><tr><th>Nota</th><th>Emissão</th><th>Situação</th><th style="text-align:right">Arquivo</th></tr></thead><tbody>
+    ${lista.map(n=>`<tr><td><b>NFCom nº ${esc(n.numero)}</b>${n.serie?` <span style="color:var(--ink-soft)">· Série ${esc(n.serie)}</span>`:""}</td><td>${esc(fmtData(n.data))}</td><td>${n.status==="1"?`<span class="chip ok">Autorizada</span>`:`<span class="chip warn">${esc(st[n.status]||n.status)}</span>`}</td>
+    <td class="acoes-td"><div class="acoes">${n.status==="1"?`<a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="${esc(BASE+"/app-nota-pdf?id="+encodeURIComponent(n.id)+"&contrato="+encodeURIComponent(S.ct.contratoId)+"&sessao="+encodeURIComponent(sessao))}">${ic("baixar")}Baixar PDF</a>`:`<span style="color:var(--ink-soft);font-size:14px">Indisponível</span>`}</div></td></tr>`).join("")}
+  </tbody></table></div>`;
+}
+
+function vContrato(){
+  const ct=S.ct,el=$("#conteudo");
+  el.innerHTML=`<div class="cab"><div><h2>Meu contrato</h2><p>Dados do seu contrato e termo de adesão.</p></div></div>
+  <div class="grade g2">
+    <div class="card"><h3 style="font-size:18px;margin-bottom:6px">Dados do contrato</h3>
+      <dl class="lista-dados" style="margin:0"><div><dt>Titular</dt><dd>${esc(S.conta.nome)}</dd></div><div><dt>Plano</dt><dd>${esc(ct.plano||"Internet")}</dd></div><div><dt>Contrato</dt><dd>#${esc(ct.contratoId)}</dd></div><div><dt>Situação</dt><dd>${esc(ct.status||"Ativo")}</dd></div>${ct.vencimento?`<div><dt>Vencimento</dt><dd>Todo dia ${esc(ct.vencimento)}</dd></div>`:""}${ct.cidade?`<div><dt>Cidade</dt><dd>${esc(ct.cidade)}</dd></div>`:""}</dl></div>
+    <div class="card" style="text-align:center">
+      <div style="width:68px;height:68px;border-radius:50%;margin:6px auto 14px;display:flex;align-items:center;justify-content:center;background:${ct.termoAssinado?"var(--ok-bg)":"#FFF6D1"};color:${ct.termoAssinado?"var(--ok)":"var(--gold-label)"}">${ic(ct.termoAssinado?"ok":"caneta","width:32px;height:32px")}</div>
+      <h3 style="font-size:20px">${ct.termoAssinado?"Contrato assinado":"Termo de adesão pendente"}</h3>
+      <p style="color:var(--ink-soft)">${ct.termoAssinado?"Seu termo de adesão já está assinado e registrado.":"Assine na página oficial de assinatura, com validade jurídica."}</p>
+      ${!ct.termoAssinado&&ct.termoUrl?`
+      <div id="aceiteBox" style="text-align:left;border-top:1px solid var(--line);padding-top:16px;margin-top:6px">
+        ${ct.termoPdf?`<a class="btn btn-line" style="width:100%" href="${esc(ct.termoPdf)}" target="_blank" rel="noopener">${ic("documento")}1. Ler o termo de adesão</a>`:""}
+        <p class="rot" style="margin:16px 0 8px">2. Fotos e assinatura</p>
+        <div class="fotos-ass">
+          <label class="foto-card" data-k="fotoDoc"><input type="file" accept="image/*" capture="environment" hidden><span class="fc-ico">${ic("documento")}</span><span class="fc-txt">Foto do documento</span></label>
+          <label class="foto-card" data-k="foto"><input type="file" accept="image/*" capture="user" hidden><span class="fc-ico">${ic("ok")}</span><span class="fc-txt">Selfie com o documento</span></label>
+          <button type="button" class="foto-card" id="bAbreAss"><span class="fc-ico">${ic("caneta")}</span><span class="fc-txt">Assinatura</span></button>
+        </div>
+        <div id="assBox" class="oculto" style="margin-top:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span class="rot">Assine com o dedo ou o mouse</span><button type="button" class="lnk" id="bLimpaAss" style="padding:4px 8px">Limpar</button></div>
+          <canvas id="cvAss" style="width:100%;height:180px;background:#fff;border:1.5px dashed var(--line);border-radius:12px;touch-action:none;display:block"></canvas>
+          <button type="button" class="btn btn-navy btn-sm" id="bOkAss" style="margin-top:8px">${ic("check")}Usar esta assinatura</button>
+        </div>
+        <label style="display:flex;gap:10px;align-items:flex-start;margin:16px 0"><input type="checkbox" id="cbAceite" style="width:20px;height:20px;margin-top:2px;accent-color:var(--gold-deep);flex-shrink:0"><span>3. Li e aceito o Termo de Adesão e o Contrato de Prestação de Serviços da Infinyt Net, e confirmo que as fotos são verdadeiras.</span></label>
+        <div id="aceiteAviso"></div>
+        <button class="btn btn-gold" style="width:100%" id="bAceitar" disabled>${ic("caneta")}Assinar contrato</button>
+        <p style="color:var(--ink-soft);font-size:13px;margin:10px 0 0">A assinatura é registrada na plataforma oficial de assinatura eletrônica (SGPsign), com data e hora.</p>
+      </div>`:`
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        ${ct.termoPdf?`<a class="btn btn-line" href="${esc(ct.termoPdf)}" target="_blank" rel="noopener">${ic("documento")}Ver termo (PDF)</a>`:""}
+        ${!ct.termoAssinado&&!ct.termoUrl?`<a class="btn btn-wa" href="${waLink("Olá! Quero assinar meu contrato (#"+ct.contratoId+").")}" target="_blank" rel="noopener">${ic("chat")}Pedir link no WhatsApp</a>`:""}
+      </div>`}</div>
+  </div>`;
+  const box=$("#aceiteBox"); if(!box)return;
+  const dados={foto:"",fotoDoc:"",assinatura:""};
+  const cb=$("#cbAceite"),ba=$("#bAceitar");
+  const confere=()=>{ba.disabled=!(dados.foto&&dados.fotoDoc&&dados.assinatura&&cb.checked);};
+  // foto reduzida para no máximo 1280px, em JPEG (o SGPsign recebe a imagem como texto base64)
+  const reduzir=file=>new Promise((ok,erro)=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const max=1280;let w=im.width,h=im.height;if(w>h&&w>max){h=h*max/w;w=max;}else if(h>=w&&h>max){w=w*max/h;h=max;}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(im,0,0,w,h);ok(c.toDataURL("image/jpeg",0.72));};im.onerror=erro;im.src=fr.result;};fr.onerror=erro;fr.readAsDataURL(file);});
+  box.querySelectorAll("label.foto-card").forEach(l=>{const inp=l.querySelector("input");inp.onchange=async()=>{const f=inp.files&&inp.files[0];if(!f)return;try{dados[l.dataset.k]=await reduzir(f);l.classList.add("feito");l.style.backgroundImage=`url(${dados[l.dataset.k]})`;}catch(e){toast("Não deu para ler a foto. Tente outra.");}confere();};});
+  const cv=$("#cvAss");let desenhando=false,temTraco=false;
+  const preparar=()=>{const r=cv.getBoundingClientRect();cv.width=r.width*2;cv.height=r.height*2;const x=cv.getContext("2d");x.scale(2,2);x.lineWidth=2.5;x.lineCap="round";x.lineJoin="round";x.strokeStyle="#111";};
+  const pos=e=>{const r=cv.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top};};
+  const ini=e=>{e.preventDefault();desenhando=true;const p=pos(e),x=cv.getContext("2d");x.beginPath();x.moveTo(p.x,p.y);};
+  const mov=e=>{if(!desenhando)return;e.preventDefault();const p=pos(e),x=cv.getContext("2d");x.lineTo(p.x,p.y);x.stroke();temTraco=true;};
+  const fim=()=>{desenhando=false;};
+  ["mousedown","touchstart"].forEach(ev=>cv.addEventListener(ev,ini,{passive:false}));
+  ["mousemove","touchmove"].forEach(ev=>cv.addEventListener(ev,mov,{passive:false}));
+  ["mouseup","mouseleave","touchend"].forEach(ev=>cv.addEventListener(ev,fim));
+  $("#bAbreAss").onclick=()=>{$("#assBox").classList.remove("oculto");preparar();temTraco=false;};
+  $("#bLimpaAss").onclick=()=>{cv.getContext("2d").clearRect(0,0,cv.width,cv.height);temTraco=false;};
+  $("#bOkAss").onclick=()=>{if(!temTraco){toast("Desenhe sua assinatura no quadro.");return;}dados.assinatura=cv.toDataURL("image/png");const b=$("#bAbreAss");b.classList.add("feito");b.style.backgroundImage=`url(${dados.assinatura})`;b.style.backgroundSize="contain";$("#assBox").classList.add("oculto");confere();};
+  cb.onchange=confere;
+  ba.onclick=async()=>{
+    ba.disabled=true;ba.textContent="Assinando…";let r;
+    try{r=await api("app-assinar-contrato",{termoUrl:ct.termoUrl,nome:S.conta.nome,cpf:S.conta.cpf,foto:dados.foto,fotoDoc:dados.fotoDoc,assinatura:dados.assinatura});}
+    catch(e){if(e.message==="sessao")return;r={ok:false};}
+    if(r&&r.ok){ct.termoAssinado=true;box.innerHTML=`<div class="alerta ok" style="margin:0">${ic("ok")}<span><b>Contrato assinado!</b> Obrigado. Sua assinatura foi registrada.</span></div>`;return;}
+    $("#aceiteAviso").innerHTML=`<div class="alerta bad">${ic("alerta")}<span>${esc((r&&r.mensagem)||"Não foi possível assinar agora. Tente de novo.")}</span></div>`;
+    ba.innerHTML=`${ic("caneta")}Assinar contrato`;confere();
+  };
+}
+
+function vSuporte(){
+  const el=$("#conteudo");const faq=(CFG.faq&&CFG.faq.length)?CFG.faq:[
+    {q:"Minha internet está lenta, o que fazer?",a:"Reinicie o roteador desligando e ligando novamente. Aguarde 2 minutos. Se persistir, fale com a gente no WhatsApp."},
+    {q:"Estou sem conexão, e agora?",a:"Verifique se as luzes do roteador estão acesas e reinicie o aparelho. Se houver fatura em aberto, use o Desbloqueio de confiança aqui na Central."},
+    {q:"Como faço a 2ª via do meu boleto?",a:"Na aba 2ª via de boleto você copia o Pix, o código de barras ou abre o PDF."}];
+  el.innerHTML=`<div class="cab"><div><h2>Suporte</h2><p>Fale com a Infinyt pelo canal que preferir.</p></div></div>
+  <div class="grade g2" style="margin-bottom:24px">
+    <div class="card canal"><span class="ico" style="background:#E3F6EA;color:var(--wa)">${ic("chat")}</span><span class="esp"><b>WhatsApp</b><small>Atendimento rápido</small></span><a class="btn btn-wa btn-sm" href="${waLink("Olá! Vim pela Central do Assinante e preciso de ajuda.")}" target="_blank" rel="noopener">Conversar</a></div>
+    <div class="card canal"><span class="ico" style="background:var(--surface-2);color:var(--navy)">${ic("telefone")}</span><span class="esp"><b>Telefone</b><small>${esc(CFG.telefone_exibir)}</small></span><a class="btn btn-line btn-sm" href="tel:+${esc(CFG.telefone)}">Ligar</a></div>
+  </div>
+  <div class="grade" style="grid-template-columns:1.4fr 1fr">
+    <div><h3 style="font-size:18px;margin:0 0 12px">Perguntas frequentes</h3>${faq.map(f=>`<details><summary>${esc(f.q)}${ic("seta","transform:rotate(90deg)")}</summary><p>${esc(f.a)}</p></details>`).join("")}</div>
+    <div class="card"><h3 style="font-size:18px;margin-bottom:10px">Atendimento</h3><p style="margin:0 0 14px;display:flex;gap:10px">${ic("calendario")}<span>${esc(CFG.horario)}</span></p><p style="margin:0;display:flex;gap:10px;color:var(--ink-soft)">${ic("local")}<span>${esc(CFG.endereco)}</span></p></div>
+  </div>`;
+}
+
+/* ---------- início ---------- */
+(async()=>{
+  $("#topoWa").href=waLink("Olá! Vim pela Central do Assinante.");
+  const salvo=sessionStorage.getItem("infinyt_web_conta");
+  if(salvo&&sessao){try{S.conta=JSON.parse(salvo);S.ct=S.conta.contratos[0];abrirPainel("inicio");}catch(e){telaLogin();}}
+  else telaLogin();
+  await carregarConfig();
+  if(S.conta)abrirPainel(S.aba);
+})();
+</script>
+</body>
+</html>
