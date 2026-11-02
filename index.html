@@ -1,0 +1,1494 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel do App · Infinyt</title>
+<style>
+  :root {
+    --escuro: #0E2A5E; --escuro-2: #1A3A75; --fundo: #F4F7FB; --cartao: #fff;
+    --dourado: #F47B20; --dourado-forte: #D9650F; --texto: #13254A; --suave: #5B6882;
+    --borda: #E0E6EF; --verde: #17A35A; --vermelho: #D93B3B; --raio: 16px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--fundo); color: var(--texto); }
+  button, input, textarea, select { font: inherit; }
+  .esconde { display: none !important; }
+
+  /* Login */
+  .login { min-height: 100vh; display: grid; place-items: center; padding: 16px;
+    background: radial-gradient(circle at 80% 10%, rgba(244,123,32,.25), transparent 45%), linear-gradient(140deg, #16387A, #201E2E); }
+  .login form { background: var(--cartao); width: 100%; max-width: 360px; padding: 28px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,.3); }
+  .login h1 { margin: 0 0 4px; font-size: 22px; }
+  .login p { margin: 0 0 20px; color: var(--suave); font-size: 14px; }
+
+  /* Topo e abas */
+  header { background: var(--escuro); color: #fff; position: sticky; top: 0; z-index: 10; }
+  .topo { max-width: 1080px; margin: 0 auto; padding: 14px 16px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .marca { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; }
+  .marca span { background: var(--dourado); color: var(--escuro); font-size: 11px; padding: 3px 8px; border-radius: 999px; letter-spacing: 1px; text-transform: uppercase; }
+  .sair { background: transparent; border: 1px solid rgba(255,255,255,.3); color: #fff; border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+  .abas { max-width: 1080px; margin: 0 auto; padding: 10px 16px 0; display: flex; gap: 4px; }
+  .aba { background: transparent; border: 0; color: rgba(255,255,255,.7); padding: 10px 16px; border-radius: 12px 12px 0 0; cursor: pointer; font-weight: 700; }
+  .aba.ativa { background: var(--fundo); color: var(--texto); }
+
+  main { max-width: 1080px; margin: 0 auto; padding: 20px 16px 60px; }
+  .numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 22px; }
+  .numero { background: var(--cartao); border: 1px solid var(--borda); border-radius: var(--raio); padding: 14px 16px; }
+  .numero small { display: block; color: var(--suave); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+  .numero b { display: block; font-size: 28px; line-height: 1.2; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .numero span { color: var(--suave); font-size: 12px; }
+  .numero.destaque { background: var(--escuro); color: #fff; border-color: var(--escuro); }
+  .numero.destaque small, .numero.destaque span { color: rgba(255,255,255,.7); }
+  .barra { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .barra h2 { margin: 0; font-size: 20px; }
+  .dica { color: var(--suave); font-size: 13px; margin: 4px 0 0; }
+
+  .botao { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 12px; padding: 11px 18px;
+    font-weight: 700; cursor: pointer; background: var(--dourado); color: #1A1C4E; }
+  .botao:hover { background: var(--dourado-forte); }
+  .botao:disabled { opacity: .55; cursor: wait; }
+  .botao.secundario { background: var(--cartao); color: var(--texto); border: 1px solid var(--borda); }
+  .botao.perigo { background: transparent; color: var(--vermelho); border: 1px solid #F3C9C9; }
+  .botao.pequeno { padding: 7px 11px; font-size: 13px; border-radius: 10px; }
+  .botao.bloco { width: 100%; }
+
+  .campo { display: block; margin-bottom: 14px; }
+  .campo > span { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .campo input[type=text], .campo input[type=password], .campo input[type=url], .campo input[type=datetime-local], .campo textarea, .campo select {
+    width: 100%; border: 1px solid var(--borda); border-radius: 12px; padding: 11px 12px; background: #fff; color: var(--texto); }
+  .campo textarea { resize: vertical; min-height: 90px; }
+  .campo small { color: var(--suave); font-size: 12px; }
+  .linha { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Lista de anúncios */
+  .lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .item { background: var(--cartao); border-radius: var(--raio); border: 1px solid var(--borda); overflow: hidden; display: flex; flex-direction: column; }
+  .item.inativo .previa { opacity: .4; filter: grayscale(.6); }
+  .item-corpo { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid var(--borda); }
+  .item-info { font-size: 13px; color: var(--suave); min-width: 0; }
+  .item-info b { color: var(--texto); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .acoes { display: flex; gap: 6px; flex-shrink: 0; }
+  .olho { font-size: 15px; min-width: 38px; }
+  .olho.oculto { background: #FFF4D6; border-color: #F0D589; }
+  .resumo-ativos { font-size: 13px; font-weight: 700; color: var(--texto); margin-top: 6px; }
+  .vazio { background: var(--cartao); border: 2px dashed var(--borda); border-radius: var(--raio); padding: 40px 20px; text-align: center; color: var(--suave); }
+
+  /* Prévia igual ao app */
+  .previa { position: relative; }
+  .previa img { width: 100%; display: block; object-fit: cover; }
+  .previa .cartao-app { padding: 24px 20px; color: #fff; position: relative; overflow: hidden; min-height: 160px; }
+  .previa .bola { position: absolute; top: -12px; right: -12px; width: 70px; height: 70px; border-radius: 50%; background: rgba(244,123,32,.85); }
+  .previa .selo { font-size: 11px; color: #F47B20; font-weight: 800; letter-spacing: 1px; position: relative; }
+  .previa .titulo { font-size: 23px; font-weight: 900; margin: 8px 0 4px; line-height: 1.15; position: relative; }
+  .previa .texto { font-size: 13px; opacity: .9; margin-bottom: 16px; position: relative; }
+  .previa .cta { background: #F47B20; color: #1a1c4e; font-size: 13px; font-weight: 800; padding: 9px 16px; border-radius: 10px; display: inline-block; position: relative; }
+  .marca-situacao { position: absolute; top: 10px; left: 10px; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 999px; z-index: 2; background: rgba(0,0,0,.65); }
+  .marca-situacao.no-ar { background: var(--verde); }
+  .marca-situacao.agendado { background: #2D6CDF; }
+  .marca-situacao.encerrado { background: #7A7790; }
+
+  /* Interruptor */
+  .chave { position: relative; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 700; }
+  .chave input { position: absolute; opacity: 0; }
+  .chave i { width: 40px; height: 22px; border-radius: 999px; background: #CFCDDA; position: relative; transition: .2s; }
+  .chave i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: .2s; }
+  .chave input:checked + i { background: var(--verde); }
+  .chave input:checked + i::after { left: 21px; }
+
+  /* Janela de edição */
+  .fundo-modal { position: fixed; inset: 0; background: rgba(20,18,32,.55); display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px; overflow-y: auto; z-index: 50; }
+  .modal { background: var(--fundo); border-radius: 20px; width: 100%; max-width: 880px; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+  .modal-topo { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--borda); }
+  .modal-topo h3 { margin: 0; }
+  .fechar { background: transparent; border: 0; font-size: 26px; line-height: 1; cursor: pointer; color: var(--suave); }
+  .modal-corpo { display: grid; grid-template-columns: 1.1fr .9fr; gap: 20px; padding: 20px; }
+  .modal-rodape { display: flex; justify-content: flex-end; gap: 10px; padding: 0 20px 20px; }
+  .celular { background: #1A1C4E; border-radius: 28px; padding: 18px 14px; position: sticky; top: 0; }
+  .celular p { color: rgba(255,255,255,.6); font-size: 12px; margin: 0 0 10px; text-align: center; }
+  .celular .previa { border-radius: 22px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+  .upload { border: 2px dashed var(--borda); border-radius: 12px; padding: 14px; text-align: center; background: #fff; cursor: pointer; font-size: 13px; color: var(--suave); }
+  .upload b { color: var(--texto); }
+  .cores { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .cores button { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--borda); cursor: pointer; }
+  .cores button.sel { box-shadow: 0 0 0 3px var(--dourado); }
+  .cores input[type=color] { width: 36px; height: 32px; border: 0; background: none; padding: 0; cursor: pointer; }
+
+  /* Notificações */
+  .notif { display: grid; grid-template-columns: 1.1fr .9fr; gap: 20px; }
+  .cartao { background: var(--cartao); border: 1px solid var(--borda); border-radius: var(--raio); padding: 20px; }
+  .tela-celular { background: linear-gradient(160deg, #16387A, #1A1C4E); border-radius: 28px; padding: 40px 14px 120px; }
+  .push { background: rgba(255,255,255,.92); border-radius: 18px; padding: 12px 14px; display: flex; gap: 10px; }
+  .push .icone { width: 34px; height: 34px; border-radius: 9px; background: var(--dourado); display: grid; place-items: center; font-weight: 900; color: var(--escuro); flex-shrink: 0; }
+  .push b { display: block; font-size: 14px; }
+  .push span { font-size: 13px; color: #444; white-space: pre-wrap; word-break: break-word; }
+  .push small { color: #888; font-size: 11px; }
+  .contador { text-align: right; font-size: 12px; color: var(--suave); margin-top: -8px; margin-bottom: 12px; }
+  .contador.passou { color: var(--vermelho); font-weight: 700; }
+  .modelos { display: flex; flex-wrap: wrap; gap: 8px; }
+  .modelos button { border: 1px solid var(--borda); background: #fff; border-radius: 999px; padding: 7px 12px; font-size: 13px; cursor: pointer; }
+  .modelos button:hover { border-color: var(--dourado); background: #FFF8DB; }
+  .quando { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .quando label { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; cursor: pointer; }
+  .quando input[type=datetime-local] { border: 1px solid var(--borda); border-radius: 12px; padding: 9px 10px; }
+  .lista-notif { margin-top: 16px; padding: 16px 18px; }
+  .lista-notif h3 { font-size: 15px; margin: 0 0 6px; }
+  .hist-item { border-top: 1px solid var(--borda); padding: 10px 0; font-size: 13px; display: flex; gap: 10px; justify-content: space-between; align-items: flex-start; }
+  .hist-item:first-of-type { border-top: 0; }
+  .hist-item b { display: block; }
+  .hist-item small { color: var(--suave); }
+  .etiqueta { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #EEF0FF; color: #2D4BB3; margin-left: 4px; }
+
+  /* Site */
+  .site-avisos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 26px; }
+  .cartao h3 { margin: 0 0 12px; font-size: 16px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .faixa-previa { background: #F47B20; color: #0E2A5E; font-size: 13px; font-weight: 700; text-align: center; padding: 9px 12px; border-radius: 10px; margin-top: 4px; }
+  .faixa-previa u { font-weight: 800; }
+  .pop-previa { border-radius: 16px; overflow: hidden; border: 1px solid var(--borda); background: #fff; margin-top: 4px; }
+  .pop-previa img { width: 100%; display: block; max-height: 180px; object-fit: cover; }
+  .pop-previa .pp-topo { background: linear-gradient(135deg, #16387A, #0B2250); color: #fff; padding: 16px 18px; }
+  .pop-previa .pp-topo small { color: #F47B20; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; font-size: 11px; }
+  .pop-previa .pp-topo b { display: block; font-size: 19px; margin-top: 4px; }
+  .pop-previa .pp-corpo { padding: 14px 18px 18px; font-size: 13px; color: var(--suave); white-space: pre-wrap; }
+  .pop-previa .pp-botao { display: block; text-align: center; background: #F47B20; color: #0E2A5E; font-weight: 800; border-radius: 10px; padding: 10px; margin-top: 12px; }
+  .situacao-aviso { font-size: 12px; font-weight: 700; margin: 0 0 12px; }
+  .situacao-aviso.no-ar { color: var(--verde); }
+  .grupo-site { margin-bottom: 26px; }
+  .grupo-site .barra { margin-bottom: 10px; }
+  .grupo-site h3 { margin: 0; font-size: 17px; }
+  .planos-site { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .plano { background: var(--cartao); border: 1px solid var(--borda); border-radius: var(--raio); display: flex; flex-direction: column; position: relative; }
+  .plano.destaque { border: 2px solid var(--dourado); }
+  .plano.inativo .plano-topo { opacity: .4; }
+  .plano-topo { padding: 14px 16px 10px; }
+  .plano-topo small { color: var(--suave); font-weight: 700; font-size: 12px; }
+  .plano-topo .vel { font-size: 26px; font-weight: 900; line-height: 1.1; margin: 2px 0; }
+  .plano-topo .vel span { font-size: 14px; font-weight: 700; }
+  .plano-topo .preco { font-weight: 800; }
+  .plano-topo .preco small { font-weight: 600; }
+  .plano-topo .etq { display: block; font-size: 12px; color: var(--suave); margin-top: 2px; }
+  .plano .selo-destaque { position: absolute; top: 10px; right: 10px; background: var(--escuro); color: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; padding: 3px 8px; border-radius: 6px; }
+  .plano .acoes { padding: 10px; gap: 4px; border-top: 1px solid var(--borda); margin-top: auto; }
+  .plano .acoes .botao.pequeno { padding: 7px 9px; }
+  .plano-previa { background: #fff; border-radius: 18px; padding: 20px; border: 1px solid var(--borda); position: relative; }
+  .plano-previa.destaque { border: 2px solid #F47B20; }
+  .plano-previa .nome { font-size: 13px; font-weight: 700; color: #5B6882; text-transform: uppercase; letter-spacing: .5px; }
+  .plano-previa .vel { font-size: 40px; font-weight: 900; color: #0E2A5E; line-height: 1.1; }
+  .plano-previa .vel span { font-size: 18px; }
+  .plano-previa .etq { font-size: 13px; color: #5B6882; }
+  .plano-previa ul { padding: 0; margin: 14px 0; list-style: none; font-size: 13px; }
+  .plano-previa li { padding: 3px 0; }
+  .plano-previa li::before { content: "✓ "; color: var(--verde); font-weight: 900; }
+  .plano-previa .rot { font-size: 12px; color: #5B6882; }
+  .plano-previa .valor { font-size: 24px; font-weight: 900; color: #0E2A5E; }
+  .plano-previa .valor small { font-size: 13px; font-weight: 600; }
+  .plano-previa .btn-previa { display: block; text-align: center; border: 2px solid #F47B20; border-radius: 12px; padding: 10px; font-weight: 800; margin-top: 12px; color: #0E2A5E; }
+  .plano-previa.destaque .btn-previa { background: #F47B20; }
+  .plano-previa .selo-destaque { position: absolute; top: 14px; right: 14px; background: #0E2A5E; color: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 4px 9px; border-radius: 6px; }
+
+  /* App */
+  .cores-tema { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .cores-tema button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--borda); background: #fff; border-radius: 999px; padding: 6px 11px 6px 6px; font-size: 13px; cursor: pointer; }
+  .cores-tema button i { width: 18px; height: 18px; border-radius: 50%; display: inline-block; }
+  .cores-tema button.sel { border-color: var(--escuro); box-shadow: 0 0 0 2px var(--escuro) inset; }
+  .mini-app { border-radius: 22px; overflow: hidden; border: 6px solid #1A1C4E; max-width: 260px; margin: 6px auto 0; font-size: 12px; }
+  .mini-app .ma-topo { padding: 14px 14px 18px; color: #2b2b3d; }
+  .mini-app .ma-topo b { display: block; font-size: 18px; }
+  .mini-app .ma-card { background: #fff; margin: 0 12px; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 6px 16px rgba(0,0,0,.15); }
+  .mini-app .ma-btn { margin-top: 10px; border-radius: 10px; padding: 9px; font-weight: 800; color: #1a1000; }
+  .mini-app .ma-atalhos { display: flex; gap: 6px; padding: 12px; }
+  .mini-app .ma-atalhos span { flex: 1; background: #0E2A5E; color: #fff; border-radius: 10px; padding: 8px 0; text-align: center; font-size: 15px; }
+  .aviso-app { border-radius: 12px; padding: 10px 12px; font-size: 13px; font-weight: 600; display: flex; gap: 8px; align-items: flex-start; }
+  .aviso-app.info { background: #E8F0FE; color: #1E4FB5; }
+  .aviso-app.alerta { background: #FFF1E0; color: #B4500A; }
+  .aviso-app.sucesso { background: #E5F6EC; color: #157A42; }
+  .funcoes label { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 1px solid var(--borda); font-size: 14px; }
+  .funcoes label:first-child { border-top: 0; }
+  .funcoes small { display: block; color: var(--suave); font-size: 12px; }
+  .faq-item { border: 1px solid var(--borda); border-radius: 12px; padding: 10px; margin-bottom: 10px; background: #FAFBFD; }
+  .faq-item input, .faq-item textarea { width: 100%; border: 1px solid var(--borda); border-radius: 10px; padding: 9px 10px; background: #fff; }
+  .faq-item textarea { margin-top: 6px; min-height: 60px; resize: vertical; }
+  .faq-item .acoes { margin-top: 6px; justify-content: flex-end; }
+
+  /* Avisos */
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--escuro); color: #fff; padding: 12px 18px; border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.3); z-index: 100; max-width: calc(100% - 32px); font-size: 14px; }
+  .toast.erro { background: var(--vermelho); }
+  .toast.ok { background: var(--verde); }
+  .salvar-flutuante { position: sticky; bottom: 16px; display: flex; justify-content: center; margin-top: 20px; }
+  .salvar-flutuante .botao { box-shadow: 0 10px 30px rgba(0,0,0,.2); }
+
+  @media (max-width: 760px) {
+    .modal-corpo, .notif, .site-avisos { grid-template-columns: 1fr; }
+    .celular { position: static; }
+    .linha { grid-template-columns: 1fr; }
+    .numeros { grid-template-columns: 1fr 1fr; }
+    .numero.destaque { grid-column: 1 / -1; }
+    .aba { padding: 10px 12px; }
+  }
+/* Fila do WhatsApp */
+.fila-botoes { display: flex; gap: 8px; flex-wrap: wrap; }
+.fila-situacao { margin: 4px 0 16px; font-weight: 600; }
+.fila-grade { display: grid; grid-template-columns: minmax(280px, 1fr) 1.6fr; gap: 16px; align-items: start; }
+.fila-dias { display: flex; gap: 18px; flex-wrap: wrap; margin: 6px 0 14px; }
+.fila-lista { display: flex; flex-direction: column; gap: 8px; max-height: 560px; overflow: auto; }
+.fila-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid var(--borda); border-radius: 12px; }
+.fila-item p { margin: 3px 0 0; color: var(--suave); font-size: 13px; word-break: break-word; }
+.fila-item small { color: var(--suave); }
+.fila-item .lado { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.fila-chip { font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+.fila-pend { background: #FFF1E0; color: #8A4B00; }
+.fila-ok { background: #E5F6EC; color: #157A42; }
+.fila-erro { background: #FDE8E8; color: #B3261E; }
+.fila-canc { background: #ECECEC; color: #555; }
+.fila-grade .campo input[type=number] { width: 100%; border: 1px solid var(--borda); border-radius: 12px; padding: 11px 12px; background: #fff; color: var(--texto); }
+.fila-grade .campo small { display: block; margin-top: 4px; }
+@media (max-width: 900px) { .fila-grade { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<section class="login" id="tela-login">
+  <form id="form-login">
+    <h1>Painel do App</h1>
+    <p>App e site da Infinyt Net</p>
+    <label class="campo"><span>Senha</span><input type="password" id="senha" autocomplete="current-password" required></label>
+    <button class="botao bloco" type="submit" id="btn-entrar">Entrar</button>
+    <p class="dica esconde" id="aviso-endereco" style="margin:14px 0 0;text-align:center">Para ficar logado ao atualizar a página, use
+      <a href="https://painel-infinyt.oryxinternet.com.br/">painel-infinyt.oryxinternet.com.br</a></p>
+  </form>
+</section>
+
+<!-- Painel -->
+<div id="tela-painel" class="esconde">
+  <header>
+    <div class="topo">
+      <div class="marca">Infinyt <span>Painel do App</span></div>
+      <button class="sair" id="btn-sair">Sair</button>
+    </div>
+    <nav class="abas">
+      <button class="aba ativa" data-aba="anuncios">📣 Anúncios</button>
+      <button class="aba" data-aba="notificacoes">🔔 Notificações</button>
+      <button class="aba" data-aba="app">📱 App</button>
+      <button class="aba" data-aba="site">🌐 Site</button>
+      <button class="aba" data-aba="fila">💬 Fila WhatsApp</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Quantas pessoas têm o app -->
+    <div class="numeros" id="numeros" title="Conta quem entrou no app e aceitou receber notificações">
+      <div class="numero destaque"><small>👤 Clientes com o app</small><b id="num-clientes">…</b><span>entraram no app e aceitam notificações</span></div>
+      <div class="numero"><small>🆕 Novos clientes</small><b id="num-novos7">…</b><span id="num-novos30">nos últimos 7 dias</span></div>
+      <div class="numero"><small>📱 Registros de aparelho</small><b id="num-aparelhos">…</b><span>inclui trocas de celular e reinstalações</span>
+        <button class="botao secundario pequeno" id="btn-limpar" type="button" style="margin-top:8px" title="Pergunta ao Google quais celulares ainda têm o app. Ninguém recebe notificação.">🧹 Tirar aparelhos antigos</button></div>
+    </div>
+
+    <!-- Anúncios -->
+    <section id="aba-anuncios">
+      <div class="barra">
+        <div>
+          <h2>Anúncios do app</h2>
+          <p class="dica">Aparecem no carrossel da tela inicial, na ordem abaixo. Use o 👁 para ocultar sem apagar.</p>
+          <div class="resumo-ativos" id="resumo-ativos"></div>
+        </div>
+        <button class="botao" id="btn-novo">＋ Novo anúncio</button>
+      </div>
+      <div class="lista" id="lista"></div>
+      <div class="salvar-flutuante esconde" id="caixa-salvar">
+        <button class="botao" id="btn-salvar">💾 Salvar alterações no app</button>
+      </div>
+    </section>
+
+    <!-- Notificações -->
+    <section id="aba-notificacoes" class="esconde">
+      <div class="barra">
+        <div>
+          <h2>Enviar notificação</h2>
+          <p class="dica">Vai para todos os clientes com o app instalado e as notificações ligadas.</p>
+        </div>
+      </div>
+      <div class="notif">
+        <div class="cartao">
+          <div class="campo"><span>Modelos prontos</span>
+            <div class="modelos" id="modelos"></div>
+          </div>
+          <form id="form-notif">
+            <label class="campo"><span>Para quem</span>
+              <select id="n-destino"><option value="">Todos os clientes com o app</option></select>
+              <small id="n-destino-info">Carregando as cidades…</small>
+            </label>
+            <label class="campo"><span>Título</span><input type="text" id="n-titulo" maxlength="65" placeholder="Ex.: Manutenção programada" required></label>
+            <div class="contador" id="c-titulo">0/65</div>
+            <label class="campo"><span>Mensagem</span><textarea id="n-msg" maxlength="240" placeholder="Ex.: Hoje das 23h às 1h teremos manutenção na rede de Planaltina." required></textarea></label>
+            <div class="contador" id="c-msg">0/240</div>
+            <div class="campo"><span>Quando enviar</span>
+              <div class="quando">
+                <label><input type="radio" name="quando" value="agora" checked> Agora</label>
+                <label><input type="radio" name="quando" value="agendar"> Agendar</label>
+                <input type="datetime-local" id="n-quando" class="esconde">
+              </div>
+            </div>
+            <button class="botao bloco" type="submit" id="btn-enviar">🔔 Enviar para todos os clientes</button>
+          </form>
+        </div>
+        <div>
+          <div class="tela-celular">
+            <div class="push">
+              <div class="icone">O</div>
+              <div style="min-width:0">
+                <small>Infinyt Net · agora</small>
+                <b id="p-titulo">Título da notificação</b>
+                <span id="p-msg">A mensagem aparece aqui.</span>
+              </div>
+            </div>
+          </div>
+          <div class="cartao lista-notif">
+            <h3>⏰ Agendadas</h3>
+            <div id="agendadas"><small class="dica">Carregando…</small></div>
+          </div>
+          <div class="cartao lista-notif">
+            <h3>🗂️ Últimas enviadas</h3>
+            <div id="historico"><small class="dica">Carregando…</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Site -->
+    <section id="aba-site" class="esconde">
+      <div class="barra">
+        <div>
+          <h2>Site infinyt.com.br</h2>
+          <p class="dica">Planos, faixa de aviso e pop-up. Depois de publicar, o site mostra a versão nova em até 1 minuto.</p>
+        </div>
+        <a class="botao secundario" href="https://infinyt.com.br" target="_blank" rel="noopener">Abrir o site ↗</a>
+      </div>
+
+      <div id="site-carregando" class="vazio">Carregando o site…</div>
+      <div id="site-conteudo" class="esconde">
+        <div class="site-avisos">
+          <div class="cartao">
+            <h3>📢 Faixa no topo <label class="chave"><input type="checkbox" id="fx-ativo"><i></i> No site</label></h3>
+            <p class="situacao-aviso" id="fx-situacao"></p>
+            <label class="campo"><span>Texto da faixa</span><input type="text" id="fx-texto" maxlength="120" placeholder="Ex.: Instalação grátis em todos os planos até 30/11"></label>
+            <label class="campo"><span>Ao clicar (opcional)</span><input type="text" id="fx-destino" maxlength="300" placeholder="Mensagem do WhatsApp ou link https://..."><small>Texto = abre o WhatsApp com essa mensagem. Link = abre o endereço.</small></label>
+            <div class="linha">
+              <label class="campo"><span>A partir de</span><input type="datetime-local" id="fx-inicio"><small>Vazio = já</small></label>
+              <label class="campo"><span>Até</span><input type="datetime-local" id="fx-fim"><small>Vazio = sem data para sair</small></label>
+            </div>
+            <div class="faixa-previa" id="fx-previa"></div>
+          </div>
+          <div class="cartao">
+            <h3>💬 Pop-up de novidade <label class="chave"><input type="checkbox" id="pp-ativo"><i></i> No site</label></h3>
+            <p class="situacao-aviso" id="pp-situacao"></p>
+            <label class="campo"><span>Imagem (opcional)</span>
+              <div class="upload" id="pp-upload"><b>Escolher imagem</b></div>
+              <input type="file" id="pp-arquivo" accept="image/*" class="esconde">
+            </label>
+            <label class="campo" style="margin-top:-6px"><input type="url" id="pp-imagem" placeholder="ou cole o endereço da imagem (https://...)"></label>
+            <label class="campo"><span>Título</span><input type="text" id="pp-titulo" maxlength="80" placeholder="Ex.: Black Friday Infinyt"></label>
+            <label class="campo"><span>Texto</span><textarea id="pp-texto" maxlength="300" placeholder="Ex.: 1 Giga por R$ 89,90 nos 3 primeiros meses."></textarea></label>
+            <div class="linha">
+              <label class="campo"><span>Texto do botão</span><input type="text" id="pp-botao" maxlength="30" placeholder="Quero aproveitar"></label>
+              <label class="campo"><span>Botão abre</span><input type="text" id="pp-destino" maxlength="300" placeholder="Mensagem do WhatsApp ou link"></label>
+            </div>
+            <div class="linha">
+              <label class="campo"><span>A partir de</span><input type="datetime-local" id="pp-inicio"><small>Vazio = já</small></label>
+              <label class="campo"><span>Até</span><input type="datetime-local" id="pp-fim"><small>Vazio = sem data para sair</small></label>
+            </div>
+            <p class="dica" style="margin:0 0 8px">Cada visitante vê o pop-up uma vez. Se você mudar o texto ou a imagem, ele aparece de novo.</p>
+            <div class="pop-previa" id="pp-previa"></div>
+          </div>
+        </div>
+        <div id="site-planos"></div>
+      </div>
+      <div class="salvar-flutuante esconde" id="caixa-salvar-site">
+        <button class="botao" id="btn-salvar-site">🌐 Publicar no site</button>
+      </div>
+    </section>
+
+    <!-- App -->
+    <!-- Fila do WhatsApp -->
+    <section id="aba-fila" class="esconde">
+      <div class="barra">
+        <div>
+          <h2>Fila do WhatsApp</h2>
+          <p class="dica">Os boletos que o SGP manda saem aos poucos, uma mensagem por vez, para o número não ser bloqueado.</p>
+        </div>
+        <div class="fila-botoes">
+          <button class="botao secundario" id="fila-pausar" type="button">⏸ Pausar</button>
+          <button class="botao secundario" id="fila-reenviar" type="button">↻ Reenviar falhas</button>
+        </div>
+      </div>
+      <div class="numeros">
+        <div class="numero destaque"><small>⏳ Na fila</small><b id="fila-pendentes">…</b><span>esperando a vez</span></div>
+        <div class="numero"><small>✅ Enviadas hoje</small><b id="fila-hoje">…</b><span id="fila-limite-txt"></span></div>
+        <div class="numero"><small>⚠️ Falharam</small><b id="fila-falhas">…</b><span>depois de 3 tentativas</span></div>
+      </div>
+      <p class="fila-situacao" id="fila-situacao"></p>
+      <div class="fila-grade">
+        <div class="cartao">
+          <h3>⚙️ Como sai</h3>
+          <div class="linha">
+            <label class="campo"><span>Começa às</span><input type="number" id="fila-inicio" min="0" max="23"><small>hora</small></label>
+            <label class="campo"><span>Para às</span><input type="number" id="fila-fim" min="1" max="24"><small>hora</small></label>
+          </div>
+          <div class="linha">
+            <label class="campo"><span>Intervalo mínimo</span><input type="number" id="fila-min" min="30"><small>segundos</small></label>
+            <label class="campo"><span>Intervalo máximo</span><input type="number" id="fila-max" min="30"><small>segundos (sorteia entre os dois)</small></label>
+          </div>
+          <label class="campo"><span>Limite por dia</span><input type="number" id="fila-limite" min="1"><small>O que passar fica para o dia seguinte</small></label>
+          <div class="fila-dias">
+            <label class="chave"><input type="checkbox" id="fila-sabado"><i></i> Envia no sábado</label>
+            <label class="chave"><input type="checkbox" id="fila-domingo"><i></i> Envia no domingo</label>
+          </div>
+          <button class="botao" id="fila-salvar" type="button">💾 Salvar</button>
+        </div>
+        <div class="cartao">
+          <h3>📋 Últimas mensagens</h3>
+          <div id="fila-lista" class="fila-lista"><div class="vazio">Carregando…</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="aba-app" class="esconde">
+      <div class="barra">
+        <div>
+          <h2>Configurações do app</h2>
+          <p class="dica">Muda no app dos clientes sem atualizar na Play Store. O cliente vê na próxima vez que abrir o app.</p>
+        </div>
+      </div>
+      <div id="app-carregando" class="vazio">Carregando…</div>
+      <div id="app-conteudo" class="esconde">
+        <div class="site-avisos">
+          <div class="cartao">
+            <h3>📞 Contatos</h3>
+            <div class="linha">
+              <label class="campo"><span>WhatsApp</span><input type="text" id="ap-whatsapp" inputmode="tel" placeholder="TROCAR_TELEFONE_COMO_APARECE"><small>Botões de WhatsApp do app</small></label>
+              <label class="campo"><span>Telefone para ligar</span><input type="text" id="ap-telefone" inputmode="tel" placeholder="TROCAR_TELEFONE_COMO_APARECE"></label>
+            </div>
+            <label class="campo"><span>Telefone como aparece no app</span><input type="text" id="ap-telefone_exibir" maxlength="30" placeholder="TROCAR_TELEFONE_COMO_APARECE"></label>
+            <div class="linha">
+              <label class="campo"><span>Instagram</span><input type="text" id="ap-instagram" maxlength="40" placeholder="infinytnet"></label>
+              <label class="campo"><span>Facebook (link)</span><input type="url" id="ap-facebook" placeholder="https://facebook.com/..."></label>
+            </div>
+            <label class="campo"><span>Horário de atendimento</span><input type="text" id="ap-horario" maxlength="80"></label>
+            <label class="campo"><span>Endereço</span><input type="text" id="ap-endereco" maxlength="160"></label>
+            <label class="campo"><span>Portal do Assinante (link)</span><input type="url" id="ap-portal" placeholder="https://..."></label>
+          </div>
+          <div class="cartao">
+            <h3>🎨 Tema do app <label class="chave"><input type="checkbox" id="ap-tema_ativo"><i></i> Ligado</label></h3>
+            <p class="situacao-aviso" id="ap-tema-situacao"></p>
+            <div class="cores-tema" id="ap-cores"></div>
+            <div class="linha">
+              <label class="campo"><span>Nome da campanha</span><input type="text" id="ap-tema_nome" maxlength="40" placeholder="Outubro Rosa"></label>
+              <label class="campo"><span>Cor</span><input type="color" id="ap-tema_cor" value="#E91E63" style="width:100%;height:44px;border:1px solid var(--borda);border-radius:12px;background:#fff;padding:4px"></label>
+            </div>
+            <div class="linha">
+              <label class="campo"><span>A partir de</span><input type="datetime-local" id="ap-tema_inicio"><small>Vazio = já</small></label>
+              <label class="campo"><span>Até</span><input type="datetime-local" id="ap-tema_fim"><small>Depois volta para o amarelo</small></label>
+            </div>
+            <div class="mini-app" id="ap-mini"></div>
+          </div>
+          <div class="cartao">
+            <h3>📢 Aviso no app <label class="chave"><input type="checkbox" id="ap-aviso_ativo"><i></i> Ligado</label></h3>
+            <p class="situacao-aviso" id="ap-aviso-situacao"></p>
+            <label class="campo"><span>Texto do aviso</span><input type="text" id="ap-aviso_texto" maxlength="140" placeholder="Ex.: Manutenção hoje das 23h à 1h em Planaltina"></label>
+            <div class="linha">
+              <label class="campo"><span>Tipo</span><select id="ap-aviso_tipo"><option value="info">ℹ️ Informação (azul)</option><option value="alerta">⚠️ Alerta (laranja)</option><option value="sucesso">✅ Tudo certo (verde)</option></select></label>
+              <label class="campo"><span>Link ao tocar (opcional)</span><input type="url" id="ap-aviso_link" placeholder="https://..."></label>
+            </div>
+            <div class="linha">
+              <label class="campo"><span>A partir de</span><input type="datetime-local" id="ap-aviso_inicio"><small>Vazio = já</small></label>
+              <label class="campo"><span>Até</span><input type="datetime-local" id="ap-aviso_fim"><small>Vazio = até você desligar</small></label>
+            </div>
+            <div class="aviso-app info" id="ap-aviso-previa"></div>
+          </div>
+          <div class="cartao">
+            <h3>🧩 Funções do app</h3>
+            <p class="dica" style="margin:-4px 0 6px">Desligue uma função se ela der problema. Ela some do app até você ligar de novo.</p>
+            <div class="funcoes" id="ap-funcoes"></div>
+          </div>
+          <div class="cartao">
+            <h3>❓ Perguntas frequentes <button class="botao secundario pequeno" type="button" id="ap-faq-nova">＋ Pergunta</button></h3>
+            <div id="ap-faq"></div>
+          </div>
+          <div class="cartao">
+            <h3>📲 Versão do app</h3>
+            <p class="dica" style="margin:-4px 0 10px">O número da versão de cada cliente aparece no app, em Perfil. Na Play Console é o "código da versão".</p>
+            <div class="linha">
+              <label class="campo"><span>Versão mais nova</span><input type="text" id="ap-versao_atual" inputmode="numeric" placeholder="Ex.: 12"><small>Abaixo dela, o app sugere atualizar</small></label>
+              <label class="campo"><span>Versão mínima</span><input type="text" id="ap-versao_minima" inputmode="numeric" placeholder="Ex.: 10"><small>Abaixo dela, o app só abre depois de atualizar</small></label>
+            </div>
+            <label class="campo"><span>Mensagem</span><input type="text" id="ap-versao_texto" maxlength="160" placeholder="Tem novidade no app da Infinyt! Atualize para continuar."></label>
+          </div>
+        </div>
+      </div>
+      <div class="salvar-flutuante esconde" id="caixa-salvar-app">
+        <button class="botao" id="btn-salvar-app">📱 Publicar no app</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Edição de plano do site -->
+<div class="fundo-modal esconde" id="modal-plano">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pl-modal-titulo">
+    <div class="modal-topo">
+      <h3 id="pl-modal-titulo">Plano</h3>
+      <button class="fechar" id="pl-fechar" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-corpo">
+      <div>
+        <label class="campo"><span>Nome do plano</span><input type="text" id="pl-nome" maxlength="60" placeholder="Ex.: Premium + Disney+"></label>
+        <div class="linha">
+          <label class="campo"><span>Velocidade</span><input type="text" id="pl-velocidade" maxlength="12" placeholder="700"></label>
+          <label class="campo"><span>Unidade</span><input type="text" id="pl-unidade" maxlength="20" placeholder="Mega, Giga, ramais, dias" list="unidades"></label>
+        </div>
+        <datalist id="unidades"><option value="Mega"><option value="Giga"><option value="ramais"><option value="dias"></datalist>
+        <label class="campo"><span>Frase embaixo da velocidade</span><input type="text" id="pl-etiqueta" maxlength="80" placeholder="Ex.: Após o vencimento R$ 129,90"></label>
+        <label class="campo"><span>O que inclui (um por linha)</span><textarea id="pl-itens" rows="5" placeholder="100% Fibra Óptica&#10;Wi-Fi Turbo&#10;Instalação grátis"></textarea></label>
+        <div class="linha">
+          <label class="campo"><span>Acima do preço</span><input type="text" id="pl-rotulo" maxlength="40" placeholder="A partir de"></label>
+          <label class="campo"><span>Preço</span><input type="text" id="pl-preco" maxlength="30" placeholder="R$ 99,90 ou Sob consulta"></label>
+        </div>
+        <div class="linha">
+          <label class="campo"><span>Depois do preço</span><input type="text" id="pl-sufixo" maxlength="15" placeholder="/mês"><small>Vazio para valor único</small></label>
+          <label class="campo"><span>Selo de destaque</span><input type="text" id="pl-destaque" maxlength="30" placeholder="Mais popular"><small>Vazio = plano comum</small></label>
+        </div>
+        <div class="linha">
+          <label class="campo"><span>Texto do botão</span><input type="text" id="pl-botao" maxlength="30" placeholder="Contratar"></label>
+          <label class="campo"><span>Mensagem do WhatsApp</span><input type="text" id="pl-mensagem" maxlength="200" placeholder="Olá! Quero contratar o plano ... da Infinyt."><small>Vazio = mensagem automática com o nome</small></label>
+        </div>
+        <label class="chave"><input type="checkbox" id="pl-ativo" checked><i></i> Mostrar no site</label>
+      </div>
+      <div>
+        <div class="celular">
+          <p>Como vai aparecer no site</p>
+          <div class="plano-previa" id="pl-previa"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-rodape">
+      <button class="botao secundario" id="pl-cancelar">Cancelar</button>
+      <button class="botao" id="pl-ok">Usar este plano</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edição de anúncio -->
+<div class="fundo-modal esconde" id="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <div class="modal-topo">
+      <h3 id="modal-titulo">Anúncio</h3>
+      <button class="fechar" id="btn-fechar" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-corpo">
+      <div>
+        <label class="campo"><span>Imagem (opcional)</span>
+          <div class="upload" id="upload"><b>Escolher imagem</b><br>JPG ou PNG. Com imagem, o anúncio mostra só a imagem.</div>
+          <input type="file" id="arquivo" accept="image/*" class="esconde">
+        </label>
+        <div id="caixa-remover-img" class="esconde" style="margin:-6px 0 14px"><button class="botao perigo pequeno" type="button" id="btn-remover-img">Remover imagem</button></div>
+        <label class="campo"><span>Título</span><input type="text" id="f-titulo" maxlength="60" placeholder="Ex.: 1 Giga por R$ 99,90"></label>
+        <label class="campo"><span>Texto</span><textarea id="f-texto" maxlength="160" placeholder="Ex.: Fibra óptica com Wi-Fi 6. Instalação grátis."></textarea></label>
+        <div class="linha">
+          <label class="campo"><span>Link ao tocar</span><input type="url" id="f-link" placeholder="https://..."><small>Vazio = sem botão. Os toques são contados.</small></label>
+          <label class="campo"><span>Texto do botão</span><input type="text" id="f-botao" maxlength="24" placeholder="Saiba mais"></label>
+        </div>
+        <div class="linha">
+          <label class="campo"><span>Aparecer a partir de</span><input type="datetime-local" id="f-inicio"><small>Vazio = já</small></label>
+          <label class="campo"><span>Sair do app em</span><input type="datetime-local" id="f-fim"><small>Vazio = sem data para sair</small></label>
+        </div>
+        <div class="campo"><span>Cor de fundo (quando não tem imagem)</span>
+          <div class="cores" id="cores"></div>
+        </div>
+        <label class="chave"><input type="checkbox" id="f-ativo" checked><i></i> Mostrar no app</label>
+      </div>
+      <div>
+        <div class="celular">
+          <p>Como vai aparecer no app</p>
+          <div class="previa" id="previa-modal"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-rodape">
+      <button class="botao secundario" id="btn-cancelar">Cancelar</button>
+      <button class="botao" id="btn-ok">Usar este anúncio</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // No site da Infinyt (painel-infinyt.oryxinternet.com.br/) o navegador guarda o login; o n8n abre a página
+  // numa caixa isolada que não guarda nada. Fora do n8n, a API fica no endereço da Infinyt.
+  const NO_N8N = /\/webhook\//.test(location.pathname);
+  const API = NO_N8N ? location.origin + '/webhook/painel-app-api' : 'https://n8n-infinytnet.dfnet.net.br/webhook/painel-app-api';
+  if (NO_N8N) document.getElementById('aviso-endereco').classList.remove('esconde');
+  const CORES = ['#0E2A5E', '#1A1C4E', '#6B3FA0', '#0E6B5C', '#B3261E', '#C25E00', '#0E2A5E'];
+  const $ = id => document.getElementById(id);
+  let senha = '';
+  let anuncios = [];
+  let mudou = false;
+  let editando = null; // índice ou -1 para novo
+  let rascunho = null;
+
+  // ---------- utilitários ----------
+  function aviso(texto, tipo = '') {
+    const t = document.createElement('div');
+    t.className = 'toast ' + tipo;
+    t.textContent = texto;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3800);
+  }
+  async function api(acao, dados = {}) {
+    const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Painel-Senha': senha },
+      body: JSON.stringify({ acao, ...dados }) });
+    let corpo = {};
+    try { corpo = await r.json(); } catch (e) { /* sem corpo */ }
+    if (r.status === 401) { sair(); throw new Error('Senha incorreta.'); }
+    if (!r.ok || corpo.ok === false) throw new Error(corpo.erro || 'Não foi possível concluir. Tente de novo.');
+    return corpo;
+  }
+  function escapar(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+  function ativo(a) { return ['sim', 'true', '1', 'x', 'ativo', 'verdadeiro'].includes(String(a.ativo || '').trim().toLowerCase()); }
+  // as datas são guardadas como "AAAA-MM-DDTHH:MM" no horário de Brasília (a planilha às vezes devolve com espaço no lugar do T)
+  const paraData = s => { s = String(s || '').trim().replace(' ', 'T').slice(0, 16); return s ? new Date(s.length === 10 ? s + 'T00:00:00-03:00' : s + ':00-03:00') : null; };
+  const dataCurta = s => { const d = paraData(s); return d ? d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }) : ''; };
+  // situação de verdade no app: oculto pelo olho, agendado, encerrado ou aparecendo
+  function situacao(a) {
+    if (!ativo(a)) return { aparece: false, texto: 'Oculto', classe: 'oculto' };
+    const agora = new Date(), ini = paraData(a.inicio), fim = paraData(a.fim);
+    if (ini && agora < ini) return { aparece: false, texto: 'Começa ' + dataCurta(a.inicio), classe: 'agendado' };
+    if (fim && agora > fim) return { aparece: false, texto: 'Encerrado em ' + dataCurta(a.fim), classe: 'encerrado' };
+    return { aparece: true, texto: fim ? 'No app até ' + dataCurta(a.fim) : 'No app', classe: 'no-ar' };
+  }
+
+  function previa(a) {
+    if (a.imagem) return `<img src="${escapar(a.imagem)}" alt="">`;
+    return `<div class="cartao-app" style="background:linear-gradient(140deg,${escapar(a.cor || '#0E2A5E')},#1a1c4e)">
+      <div class="bola"></div><div class="selo">PROMOÇÃO</div>
+      <div class="titulo">${escapar(a.titulo || 'Título do anúncio')}</div>
+      ${a.texto ? `<div class="texto">${escapar(a.texto)}</div>` : ''}
+      ${a.destino ? `<div class="cta">${escapar(a.botao || 'Saiba mais')} →</div>` : ''}</div>`;
+  }
+
+  // ---------- login ----------
+  $('form-login').addEventListener('submit', async e => {
+    e.preventDefault();
+    senha = $('senha').value;
+    $('btn-entrar').disabled = true;
+    try {
+      await api('login');
+      // lembra o login neste navegador por 7 dias (o botão Sair esquece na hora)
+      try { localStorage.setItem('painel-login', JSON.stringify({ senha, ate: Date.now() + 7 * 86400000 })); } catch (err) { /* navegador sem armazenamento */ }
+      entrar();
+    } catch (err) { aviso(err.message, 'erro'); }
+    $('btn-entrar').disabled = false;
+  });
+  function entrar() {
+    $('tela-login').classList.add('esconde');
+    $('tela-painel').classList.remove('esconde');
+    carregarAnuncios();
+    carregarNumeros();
+  }
+  let aparelhos = null, clientes = null;
+  async function carregarNumeros() {
+    try {
+      const d = await api('estatisticas');
+      aparelhos = d.aparelhos;
+      const fmt = n => Number(n || 0).toLocaleString('pt-BR');
+      $('num-aparelhos').textContent = fmt(d.aparelhos);
+      $('num-clientes').textContent = fmt(d.clientes);
+      $('num-novos7').textContent = '+' + fmt(d.novos7);
+      $('num-novos30').textContent = `nos últimos 7 dias · +${fmt(d.novos30)} em 30 dias`;
+      clientes = d.clientes;
+      atualizarBotaoEnvio();
+    } catch (err) { $('numeros').classList.add('esconde'); }
+  }
+  // pergunta ao Firebase (modo "só conferir") quais aparelhos ainda existem; os que sumiram saem da contagem
+  $('btn-limpar').addEventListener('click', async () => {
+    if (!confirm('Conferir com o Google quais celulares ainda têm o app?\n\nNinguém recebe notificação. Os aparelhos que não existem mais saem da contagem e dos envios.')) return;
+    const b = $('btn-limpar');
+    b.disabled = true; b.textContent = 'Conferindo…';
+    try {
+      const d = await api('limpar_aparelhos');
+      aviso(`${d.conferidos} conferidos: ${d.ativos} ativos, ${d.removidos} antigos retirados` + (d.sem_resposta ? `, ${d.sem_resposta} sem resposta (ficaram)` : '') + '.', 'ok');
+      carregarNumeros();
+    } catch (err) { aviso(err.message, 'erro'); }
+    b.disabled = false; b.textContent = '🧹 Tirar aparelhos antigos';
+  });
+  function sair() {
+    senha = '';
+    try { localStorage.removeItem('painel-login'); sessionStorage.removeItem('painel-senha'); } catch (err) { /* ignora */ }
+    $('tela-painel').classList.add('esconde');
+    $('tela-login').classList.remove('esconde');
+  }
+  $('btn-sair').addEventListener('click', sair);
+
+  // ---------- fila do WhatsApp (boletos do SGP saindo aos poucos) ----------
+  const API_FILA = API.replace('painel-app-api', 'fila-api');
+  async function apiFila(acao, dados = {}) {
+    const r = await fetch(API_FILA, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Painel-Senha': senha },
+      body: JSON.stringify({ acao, ...dados }) });
+    let corpo = {};
+    try { corpo = await r.json(); } catch (e) { /* sem corpo */ }
+    if (r.status === 401) { sair(); throw new Error('Senha incorreta.'); }
+    if (!r.ok || corpo.ok === false) throw new Error(corpo.erro || 'Não foi possível concluir. Tente de novo.');
+    return corpo;
+  }
+  const FILA_PADRAO = { inicio: '8', fim: '20', sabado: 'sim', domingo: 'nao', min_seg: '60', max_seg: '150', limite_dia: '300', pausado: 'nao', proximo: '0' };
+  const ROTULO_FILA = { pendente: ['⏳ Na fila', 'fila-pend'], enviando: ['📤 Enviando', 'fila-pend'], enviado: ['✅ Enviada', 'fila-ok'],
+    falhou: ['⚠️ Falhou', 'fila-erro'], cancelado: ['✖ Cancelada', 'fila-canc'] };
+  let filaTimer = null, filaConfig = { ...FILA_PADRAO }, filaMexendo = false;
+  const telefoneBR = n => { const d = String(n || '').replace(/\D/g, '').replace(/^55/, '');
+    return d.length === 11 ? `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}` : d.length === 10 ? `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}` : d; };
+  const horaBR = s => s ? new Date(s).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }) : '';
+  function abrirFila() { carregarFila(); clearInterval(filaTimer); filaTimer = setInterval(carregarFila, 20000); }
+  function pararFila() { clearInterval(filaTimer); filaTimer = null; }
+
+  function situacaoFila(d, c) {
+    if (c.pausado === 'sim') return '⏸ Pausada: nenhuma mensagem sai até você retomar.';
+    if (!Number(d.pendentes)) return '✔ Fila vazia. O que o SGP mandar entra aqui e sai aos poucos.';
+    const br = new Date(Number(d.agora) - 3 * 3600000), hora = br.getUTCHours() + br.getUTCMinutes() / 60, dia = br.getUTCDay();
+    if ((dia === 0 && c.domingo !== 'sim') || (dia === 6 && c.sabado !== 'sim')) return '🌙 Hoje não envia. Volta no próximo dia de envio, às ' + c.inicio + 'h.';
+    if (hora < +c.inicio) return '🌙 Fora do horário: começa às ' + c.inicio + 'h.';
+    if (hora >= +c.fim) return '🌙 Fora do horário: volta amanhã às ' + c.inicio + 'h.';
+    if (Number(d.hoje) >= +c.limite_dia) return '🛑 Chegou no limite de hoje. O resto sai amanhã.';
+    const prox = Number(c.proximo);
+    if (prox > Number(d.agora)) return '📤 Enviando aos poucos. A próxima sai por volta das ' + new Date(prox).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }) + '.';
+    return '📤 Enviando aos poucos: a próxima sai no próximo minuto.';
+  }
+
+  async function carregarFila() {
+    try {
+      const d = await apiFila('resumo');
+      filaConfig = { ...FILA_PADRAO, ...(d.config || {}) };
+      const c = filaConfig;
+      $('fila-pendentes').textContent = Number(d.pendentes).toLocaleString('pt-BR');
+      $('fila-hoje').textContent = Number(d.hoje).toLocaleString('pt-BR');
+      $('fila-falhas').textContent = Number(d.falhas).toLocaleString('pt-BR');
+      $('fila-limite-txt').textContent = 'limite de ' + c.limite_dia + ' por dia';
+      $('fila-situacao').textContent = situacaoFila(d, c);
+      $('fila-pausar').textContent = c.pausado === 'sim' ? '▶ Retomar' : '⏸ Pausar';
+      $('fila-reenviar').disabled = !Number(d.falhas);
+      if (!filaMexendo) {
+        $('fila-inicio').value = c.inicio; $('fila-fim').value = c.fim;
+        $('fila-min').value = c.min_seg; $('fila-max').value = c.max_seg; $('fila-limite').value = c.limite_dia;
+        $('fila-sabado').checked = c.sabado === 'sim'; $('fila-domingo').checked = c.domingo === 'sim';
+      }
+      const lista = d.ultimas || [];
+      $('fila-lista').innerHTML = lista.length ? lista.map(m => {
+        const [rotulo, classe] = ROTULO_FILA[m.status] || [m.status, 'fila-canc'];
+        const quando = m.status === 'enviado' ? 'enviada ' + horaBR(m.enviado) : 'recebida ' + horaBR(m.criado);
+        return `<div class="fila-item"><div><b>${escapar(telefoneBR(m.numero))}</b> <small>· ${escapar(quando)}${m.tipo === 'sendMedia' ? ' · 📎 arquivo' : ''}</small>
+          <p>${escapar(m.previa || '(sem texto)')}</p>${m.erro && m.status !== 'enviado' ? `<small>Erro: ${escapar(m.erro)}</small>` : ''}</div>
+          <div class="lado"><span class="fila-chip ${classe}">${rotulo}</span>${m.status === 'pendente' || m.status === 'falhou'
+            ? `<button class="botao secundario pequeno" type="button" data-cancelar="${m.id}">Cancelar</button>` : ''}</div></div>`;
+      }).join('') : '<div class="vazio">Nenhuma mensagem ainda. Quando o SGP mandar os boletos, eles aparecem aqui.</div>';
+    } catch (err) { $('fila-situacao').textContent = '⚠️ Não consegui falar com a fila: ' + err.message; }
+  }
+
+  ['fila-inicio', 'fila-fim', 'fila-min', 'fila-max', 'fila-limite', 'fila-sabado', 'fila-domingo'].forEach(id =>
+    $(id).addEventListener('input', () => { filaMexendo = true; }));
+  $('fila-salvar').addEventListener('click', async () => {
+    const config = { inicio: $('fila-inicio').value.trim(), fim: $('fila-fim').value.trim(), min_seg: $('fila-min').value.trim(),
+      max_seg: $('fila-max').value.trim(), limite_dia: $('fila-limite').value.trim(),
+      sabado: $('fila-sabado').checked ? 'sim' : 'nao', domingo: $('fila-domingo').checked ? 'sim' : 'nao' };
+    if (+config.inicio >= +config.fim) return aviso('A hora de parar tem que ser depois da hora de começar.', 'erro');
+    if (+config.min_seg < 30) return aviso('O intervalo mínimo é de 30 segundos.', 'erro');
+    if (+config.max_seg < +config.min_seg) return aviso('O intervalo máximo tem que ser maior que o mínimo.', 'erro');
+    const b = $('fila-salvar'); b.disabled = true;
+    try { await apiFila('salvar_config', { config }); filaMexendo = false; aviso('Configuração da fila salva.', 'ok'); carregarFila(); }
+    catch (err) { aviso(err.message, 'erro'); }
+    b.disabled = false;
+  });
+  $('fila-pausar').addEventListener('click', async () => {
+    const pausar = filaConfig.pausado !== 'sim';
+    if (pausar && !confirm('Pausar a fila? Nenhuma mensagem sai até você retomar. O que o SGP mandar continua entrando na fila.')) return;
+    try { await apiFila('salvar_config', { config: { pausado: pausar ? 'sim' : 'nao' } }); aviso(pausar ? 'Fila pausada.' : 'Fila retomada.', 'ok'); carregarFila(); }
+    catch (err) { aviso(err.message, 'erro'); }
+  });
+  $('fila-reenviar').addEventListener('click', async () => {
+    try { const d = await apiFila('reenviar_falhas'); aviso(d.quantos + ' mensagem(ns) voltaram para a fila.', 'ok'); carregarFila(); }
+    catch (err) { aviso(err.message, 'erro'); }
+  });
+  $('fila-lista').addEventListener('click', async e => {
+    const id = e.target.dataset && e.target.dataset.cancelar;
+    if (!id || !confirm('Cancelar esta mensagem? Ela não vai ser enviada.')) return;
+    try { await apiFila('cancelar', { id: Number(id) }); aviso('Mensagem cancelada.', 'ok'); carregarFila(); }
+    catch (err) { aviso(err.message, 'erro'); }
+  });
+
+  // ---------- abas ----------
+  document.querySelectorAll('.aba').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.aba').forEach(x => x.classList.toggle('ativa', x === b));
+    ['anuncios', 'notificacoes', 'site', 'app', 'fila'].forEach(a => $('aba-' + a).classList.toggle('esconde', b.dataset.aba !== a));
+    $('numeros').style.display = ['site', 'app', 'fila'].includes(b.dataset.aba) ? 'none' : ''; // os números ficam nas abas do dia a dia
+    if (b.dataset.aba === 'site' && !siteCarregado) carregarSite();
+    if (b.dataset.aba === 'app' && !appCarregado) carregarApp();
+    if (b.dataset.aba === 'fila') abrirFila(); else pararFila();
+    if (b.dataset.aba === 'notificacoes') {
+      if (!cidadesCarregadas) carregarCidades();
+      carregarAgendadas();
+      carregarHistorico();
+    }
+  }));
+
+  // cidades dos clientes com o app (consulta o SGP, pode levar alguns segundos)
+  let cidadesCarregadas = false;
+  async function carregarCidades() {
+    cidadesCarregadas = true;
+    try {
+      const d = await api('cidades');
+      const sel = $('n-destino');
+      (d.cidades || []).forEach(c => {
+        const o = document.createElement('option');
+        o.value = c.nome;
+        o.dataset.clientes = c.clientes;
+        o.textContent = `Só ${c.nome} (${c.clientes} cliente${c.clientes === 1 ? '' : 's'})`;
+        sel.appendChild(o);
+      });
+      $('n-destino-info').textContent = (d.cidades || []).length
+        ? 'Por cidade, vai só para quem tem contrato ativo nela.'
+        : 'Nenhuma cidade encontrada nos contratos.';
+    } catch (err) {
+      cidadesCarregadas = false;
+      $('n-destino-info').textContent = 'Não consegui carregar as cidades agora. Dá para enviar para todos.';
+    }
+    atualizarBotaoEnvio();
+  }
+  let atualizarBotaoEnvio = function () {
+    const op = $('n-destino').selectedOptions[0];
+    if (op && op.value) $('btn-enviar').textContent = `🔔 Enviar para ${op.value} (${op.dataset.clientes} cliente${op.dataset.clientes === '1' ? '' : 's'})`;
+    else $('btn-enviar').textContent = clientes != null ? `🔔 Enviar para os ${clientes.toLocaleString('pt-BR')} clientes com o app` : '🔔 Enviar para todos os clientes';
+  }
+  $('n-destino').addEventListener('change', () => atualizarBotaoEnvio());
+
+  // ---------- anúncios ----------
+  async function carregarAnuncios() {
+    $('lista').innerHTML = '<div class="vazio">Carregando anúncios…</div>';
+    try {
+      const d = await api('anuncios');
+      anuncios = (d.anuncios || []).sort((a, b) => (Number(a.ordem) || 999) - (Number(b.ordem) || 999));
+      mudou = false;
+      desenharLista();
+    } catch (err) { $('lista').innerHTML = `<div class="vazio">${escapar(err.message)}</div>`; }
+  }
+  function desenharLista() {
+    $('caixa-salvar').classList.toggle('esconde', !mudou);
+    const visiveis = anuncios.filter(a => situacao(a).aparece).length;
+    $('resumo-ativos').textContent = anuncios.length
+      ? `${visiveis} aparecendo no app agora` + (anuncios.length > visiveis ? ` · ${anuncios.length - visiveis} fora do ar (ocultos, agendados ou encerrados)` : '')
+      : '';
+    if (!anuncios.length) { $('lista').innerHTML = '<div class="vazio">Nenhum anúncio ainda. Clique em <b>Novo anúncio</b>.</div>'; return; }
+    $('lista').innerHTML = anuncios.map((a, i) => { const s = situacao(a); return `
+      <div class="item ${s.aparece ? '' : 'inativo'}">
+        <div class="previa"><span class="marca-situacao ${s.classe}">${escapar(s.texto)}</span>${previa(a)}</div>
+        <div class="item-corpo">
+          <div class="item-info"><b>${escapar(a.titulo || (a.imagem ? 'Anúncio com imagem' : 'Sem título'))}</b>${i + 1}º no carrossel
+            ${a.destino ? ` · 👆 <span title="Toques no total: ${Number(a.cliques || 0)}">${Number(a.cliques30 || 0)} toque(s) em 30 dias</span>` : ''}</div>
+          <div class="acoes">
+            <button class="botao secundario pequeno olho ${ativo(a) ? '' : 'oculto'}" data-acao="olho" data-i="${i}"
+              title="${ativo(a) ? 'Aparecendo no app. Toque para ocultar' : 'Oculto. Toque para mostrar no app'}"
+              aria-label="${ativo(a) ? 'Ocultar do app' : 'Mostrar no app'}">${ativo(a) ? '👁' : '🙈'}</button>
+            <button class="botao secundario pequeno" data-acao="subir" data-i="${i}" title="Subir" ${i === 0 ? 'disabled' : ''}>↑</button>
+            <button class="botao secundario pequeno" data-acao="descer" data-i="${i}" title="Descer" ${i === anuncios.length - 1 ? 'disabled' : ''}>↓</button>
+            <button class="botao secundario pequeno" data-acao="editar" data-i="${i}">Editar</button>
+            <button class="botao perigo pequeno" data-acao="apagar" data-i="${i}" title="Apagar">🗑</button>
+          </div>
+        </div>
+      </div>`; }).join('');
+  }
+  $('lista').addEventListener('click', e => {
+    const b = e.target.closest('button[data-acao]');
+    if (!b) return;
+    const i = Number(b.dataset.i);
+    const acao = b.dataset.acao;
+    if (acao === 'subir' && i > 0) [anuncios[i - 1], anuncios[i]] = [anuncios[i], anuncios[i - 1]];
+    else if (acao === 'descer' && i < anuncios.length - 1) [anuncios[i + 1], anuncios[i]] = [anuncios[i], anuncios[i + 1]];
+    else if (acao === 'apagar') { if (!confirm('Apagar este anúncio?')) return; anuncios.splice(i, 1); }
+    else if (acao === 'olho') anuncios[i] = { ...anuncios[i], ativo: ativo(anuncios[i]) ? 'nao' : 'sim' };
+    else if (acao === 'editar') { abrirModal(i); return; }
+    mudou = true;
+    desenharLista();
+  });
+  $('btn-novo').addEventListener('click', () => abrirModal(-1));
+
+  $('btn-salvar').addEventListener('click', async () => {
+    $('btn-salvar').disabled = true;
+    try {
+      const lista = anuncios.map((a, i) => ({ ...a, ordem: String(i + 1) }));
+      await api('salvar_anuncios', { anuncios: lista });
+      anuncios = lista;
+      mudou = false;
+      desenharLista();
+      aviso('Anúncios salvos. O app já mostra a versão nova.', 'ok');
+    } catch (err) { aviso(err.message, 'erro'); }
+    $('btn-salvar').disabled = false;
+  });
+  window.addEventListener('beforeunload', e => { if (mudou || mudouSite || mudouApp) { e.preventDefault(); e.returnValue = ''; } });
+
+  // ---------- janela de edição ----------
+  function abrirModal(i) {
+    editando = i;
+    rascunho = i >= 0 ? { ...anuncios[i] } : { titulo: '', texto: '', cor: CORES[0], imagem: '', link: '', botao: 'Saiba mais', ativo: 'sim' };
+    $('modal-titulo').textContent = i >= 0 ? 'Editar anúncio' : 'Novo anúncio';
+    $('f-titulo').value = rascunho.titulo || '';
+    $('f-texto').value = rascunho.texto || '';
+    $('f-link').value = rascunho.destino || '';
+    $('f-inicio').value = rascunho.inicio || '';
+    $('f-fim').value = rascunho.fim || '';
+    $('f-botao').value = rascunho.botao || '';
+    $('f-ativo').checked = i < 0 || ativo(rascunho);
+    desenharCores();
+    atualizarModal();
+    $('modal').classList.remove('esconde');
+    $('f-titulo').focus();
+  }
+  function fecharModal() { $('modal').classList.add('esconde'); }
+  function atualizarModal() {
+    rascunho.titulo = $('f-titulo').value.trim();
+    rascunho.texto = $('f-texto').value.trim();
+    rascunho.destino = $('f-link').value.trim();
+    rascunho.inicio = $('f-inicio').value;
+    rascunho.fim = $('f-fim').value;
+    rascunho.botao = $('f-botao').value.trim();
+    rascunho.ativo = $('f-ativo').checked ? 'sim' : 'nao';
+    $('previa-modal').innerHTML = previa(rascunho);
+    $('caixa-remover-img').classList.toggle('esconde', !rascunho.imagem);
+    $('upload').innerHTML = rascunho.imagem ? '<b>Trocar imagem</b>' : '<b>Escolher imagem</b><br>JPG ou PNG. Com imagem, o anúncio mostra só a imagem.';
+  }
+  function desenharCores() {
+    const atual = (rascunho.cor || '').toUpperCase();
+    $('cores').innerHTML = CORES.map(c => `<button type="button" data-cor="${c}" style="background:${c}" class="${c.toUpperCase() === atual ? 'sel' : ''}" aria-label="Cor ${c}"></button>`).join('')
+      + `<input type="color" id="cor-livre" value="${/^#[0-9a-f]{6}$/i.test(rascunho.cor || '') ? rascunho.cor : '#0E2A5E'}" title="Outra cor">`;
+  }
+  $('cores').addEventListener('click', e => { const b = e.target.closest('button[data-cor]'); if (!b) return; rascunho.cor = b.dataset.cor; desenharCores(); atualizarModal(); });
+  $('cores').addEventListener('input', e => { if (e.target.id === 'cor-livre') { rascunho.cor = e.target.value; atualizarModal(); } });
+  ['f-titulo', 'f-texto', 'f-link', 'f-botao', 'f-ativo', 'f-inicio', 'f-fim'].forEach(id => $(id).addEventListener('input', atualizarModal));
+  $('f-ativo').addEventListener('change', atualizarModal);
+  $('btn-fechar').addEventListener('click', fecharModal);
+  $('btn-cancelar').addEventListener('click', fecharModal);
+  $('modal').addEventListener('click', e => { if (e.target.id === 'modal') fecharModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('modal').classList.contains('esconde')) fecharModal(); });
+  $('btn-remover-img').addEventListener('click', () => { rascunho.imagem = ''; atualizarModal(); });
+  $('btn-ok').addEventListener('click', () => {
+    atualizarModal();
+    if (!rascunho.imagem && !rascunho.titulo) { aviso('Coloque um título ou uma imagem.', 'erro'); return; }
+    if (rascunho.destino && !/^https?:\/\//i.test(rascunho.destino)) { aviso('O link precisa começar com https://', 'erro'); return; }
+    if (rascunho.inicio && rascunho.fim && rascunho.fim <= rascunho.inicio) { aviso('A data de saída precisa ser depois da de início.', 'erro'); return; }
+    if (editando >= 0) anuncios[editando] = rascunho; else anuncios.push(rascunho);
+    mudou = true;
+    fecharModal();
+    desenharLista();
+    aviso('Pronto. Clique em "Salvar alterações no app" para publicar.');
+  });
+
+  // ---------- envio de imagem (reduz no navegador antes de enviar) ----------
+  $('upload').addEventListener('click', () => $('arquivo').click());
+  $('arquivo').addEventListener('change', async () => {
+    const arq = $('arquivo').files[0];
+    $('arquivo').value = '';
+    if (!arq) return;
+    if (!arq.type.startsWith('image/')) { aviso('Escolha um arquivo de imagem.', 'erro'); return; }
+    $('upload').innerHTML = '<b>Enviando imagem…</b>';
+    try {
+      const base64 = await reduzir(arq, 1200, 0.85);
+      const d = await api('imagem', { base64 });
+      rascunho.imagem = d.url;
+      atualizarModal();
+    } catch (err) { aviso(err.message, 'erro'); atualizarModal(); }
+  });
+  function reduzir(arquivo, maximo, qualidade) {
+    return new Promise((ok, falha) => {
+      const img = new Image();
+      img.onload = () => {
+        const escala = Math.min(1, maximo / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * escala);
+        c.height = Math.round(img.height * escala);
+        const g = c.getContext('2d');
+        g.fillStyle = '#fff';
+        g.fillRect(0, 0, c.width, c.height);
+        g.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(img.src);
+        ok(c.toDataURL('image/jpeg', qualidade).split(',')[1]);
+      };
+      img.onerror = () => falha(new Error('Não consegui abrir essa imagem.'));
+      img.src = URL.createObjectURL(arquivo);
+    });
+  }
+
+  // ---------- notificações ----------
+  function atualizarPush() {
+    const t = $('n-titulo').value, m = $('n-msg').value;
+    $('p-titulo').textContent = t || 'Título da notificação';
+    $('p-msg').textContent = m || 'A mensagem aparece aqui.';
+    $('c-titulo').textContent = t.length + '/65';
+    $('c-msg').textContent = m.length + '/240';
+  }
+  $('n-titulo').addEventListener('input', atualizarPush);
+  $('n-msg').addEventListener('input', atualizarPush);
+  // modelos prontos: os trechos entre colchetes são para trocar antes de enviar
+  const MODELOS = [
+    { nome: '🔧 Manutenção programada', titulo: 'Manutenção programada', mensagem: 'Hoje, das [23h] à [1h], faremos uma manutenção na rede de [bairro/cidade]. A internet pode oscilar nesse período. Obrigado pela compreensão!' },
+    { nome: '⚠️ Instabilidade', titulo: 'Instabilidade na sua região', mensagem: 'Identificamos uma instabilidade na rede de [bairro/cidade]. Nossa equipe já está trabalhando para normalizar o quanto antes.' },
+    { nome: '✅ Conexão normalizada', titulo: 'Conexão normalizada', mensagem: 'A internet em [bairro/cidade] já está normalizada. Se ainda estiver sem conexão, reinicie o roteador ou chame a gente no WhatsApp.' },
+    { nome: '🎁 Promoção', titulo: '[Nome da promoção]', mensagem: '[Descreva a oferta]. Válido até [data]. Toque para saber mais!' },
+    { nome: '💳 Lembrete de fatura', titulo: 'Sua fatura vence em breve', mensagem: 'Sua fatura da Infinyt vence em [data]. Pague pelo app com Pix e evite o bloqueio. 😉' },
+  ];
+  $('modelos').innerHTML = MODELOS.map((m, i) => `<button type="button" data-modelo="${i}">${escapar(m.nome)}</button>`).join('');
+  $('modelos').addEventListener('click', e => {
+    const b = e.target.closest('button[data-modelo]');
+    if (!b) return;
+    const m = MODELOS[Number(b.dataset.modelo)];
+    if (($('n-titulo').value || $('n-msg').value) && !confirm('Trocar o texto atual pelo modelo?')) return;
+    $('n-titulo').value = m.titulo;
+    $('n-msg').value = m.mensagem;
+    atualizarPush();
+    const ini = m.mensagem.indexOf('[');
+    $('n-msg').focus();
+    if (ini >= 0) $('n-msg').setSelectionRange(ini, m.mensagem.indexOf(']', ini) + 1);
+  });
+
+  // agora ou agendar
+  const agendando = () => document.querySelector('input[name=quando]:checked').value === 'agendar';
+  document.querySelectorAll('input[name=quando]').forEach(r => r.addEventListener('change', () => {
+    $('n-quando').classList.toggle('esconde', !agendando());
+    if (agendando() && !$('n-quando').value) {
+      const d = new Date(Date.now() + 3600000 - 3 * 3600000); // daqui a 1h, em horário de Brasília
+      $('n-quando').value = d.toISOString().slice(0, 14) + '00';
+    }
+    atualizarBotaoEnvio();
+  }));
+  const atualizarBotaoBase = atualizarBotaoEnvio;
+  atualizarBotaoEnvio = function () {
+    atualizarBotaoBase();
+    if (agendando()) $('btn-enviar').textContent = $('btn-enviar').textContent.replace('🔔 Enviar', '⏰ Agendar');
+  };
+
+  $('form-notif').addEventListener('submit', async e => {
+    e.preventDefault();
+    const titulo = $('n-titulo').value.trim(), mensagem = $('n-msg').value.trim();
+    if (!titulo || !mensagem) return;
+    if (/\[[^\]]+\]/.test(titulo + mensagem) && !confirm('O texto ainda tem trechos entre [colchetes] do modelo. Enviar assim mesmo?')) return;
+    const cidade = $('n-destino').value;
+    const op = $('n-destino').selectedOptions[0];
+    const quantos = cidade ? `os clientes de ${cidade} (${op.dataset.clientes})`
+      : clientes != null ? `os ${clientes.toLocaleString('pt-BR')} clientes com o app` : 'TODOS os clientes';
+    const quando = agendando() ? $('n-quando').value : '';
+    if (agendando() && !quando) { aviso('Escolha o dia e a hora do envio.', 'erro'); return; }
+    const pergunta = quando ? `Agendar para ${dataCurta(quando)}, para ${quantos}?` : `Enviar agora para ${quantos}?`;
+    if (!confirm(`${pergunta}\n\n${titulo}\n${mensagem}`)) return;
+    $('btn-enviar').disabled = true;
+    $('btn-enviar').textContent = quando ? 'Agendando…' : 'Enviando…';
+    try {
+      if (quando) {
+        await api('agendar', { titulo, mensagem, cidade, quando });
+        aviso(`Agendada para ${dataCurta(quando)}.`, 'ok');
+        carregarAgendadas();
+      } else {
+        const d = await api('notificar', { titulo, mensagem, cidade });
+        aviso(`Notificação enviada para ${d.enviados} aparelho(s)` + (d.removidos ? `. ${d.removidos} aparelho(s) antigo(s) removido(s) da lista.` : '.'), 'ok');
+        carregarHistorico();
+        carregarNumeros();
+      }
+      $('n-titulo').value = ''; $('n-msg').value = ''; atualizarPush();
+    } catch (err) { aviso(err.message, 'erro'); }
+    $('btn-enviar').disabled = false;
+    atualizarBotaoEnvio();
+  });
+
+  // agendadas e histórico (ficam na planilha, aparecem em qualquer computador)
+  async function carregarAgendadas() {
+    try {
+      const d = await api('agendadas');
+      const lista = d.agendadas || [];
+      $('agendadas').innerHTML = lista.length ? lista.map(a => `
+        <div class="hist-item"><div><b>${escapar(a.titulo)}</b>${escapar(a.mensagem)}<br>
+          <small>⏰ ${escapar(dataCurta(a.quando))} · ${escapar(a.cidade || 'Todos')}</small></div>
+          <button class="botao perigo pequeno" data-cancelar="${escapar(a.id)}">Cancelar</button></div>`).join('')
+        : '<small class="dica">Nenhuma notificação agendada.</small>';
+    } catch (err) { $('agendadas').innerHTML = '<small class="dica">Não consegui carregar.</small>'; }
+  }
+  $('agendadas').addEventListener('click', async e => {
+    const b = e.target.closest('button[data-cancelar]');
+    if (!b || !confirm('Cancelar esta notificação agendada?')) return;
+    b.disabled = true;
+    try { await api('cancelar_agendada', { id: b.dataset.cancelar }); aviso('Agendamento cancelado.', 'ok'); carregarAgendadas(); }
+    catch (err) { aviso(err.message, 'erro'); b.disabled = false; }
+  });
+  async function carregarHistorico() {
+    try {
+      const d = await api('historico');
+      const lista = d.historico || [];
+      $('historico').innerHTML = lista.length ? lista.map(h => `
+        <div class="hist-item"><div><b>${escapar(h.titulo)}${h.origem === 'agendada' ? '<span class="etiqueta">agendada</span>' : ''}</b>${escapar(h.mensagem)}<br>
+          <small>${escapar(new Date(h.data).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }))} · ${escapar(h.cidade)} · ${h.enviados} aparelho(s)</small></div></div>`).join('')
+        : '<small class="dica">Nenhuma notificação enviada ainda.</small>';
+    } catch (err) { $('historico').innerHTML = '<small class="dica">Não consegui carregar.</small>'; }
+  }
+
+  // ---------- site: planos, faixa e pop-up ----------
+  const GRUPOS_SITE = [
+    ['residencial', '🏠 Residencial', 'Página inicial e Internet Residencial'],
+    ['flex', '🏢 Flex', 'Página Dedicados e Flex'],
+    ['dedicado', '🔒 Dedicado', 'Página Dedicados e Flex'],
+    ['telefonia', '☎️ Telefonia', 'Página Telefonia Empresarial'],
+    ['starlink', '📡 Starlink', 'Página Starlink (locação)'],
+  ];
+  let siteCarregado = false, mudouSite = false;
+  let planosSite = [];
+  let avisosSite = { faixa: {}, popup: {} };
+  let editandoPlano = null, rascunhoPlano = null;
+  const ehLink = s => /^https?:\/\//i.test(String(s || '').trim());
+  const paraCampo = s => String(s || '').trim().replace(' ', 'T').slice(0, 16); // valor do datetime-local
+
+  async function carregarSite() {
+    siteCarregado = true;
+    try {
+      const d = await api('site');
+      planosSite = d.planos || [];
+      avisosSite = { faixa: d.avisos && d.avisos.faixa || {}, popup: d.avisos && d.avisos.popup || {} };
+      mudouSite = false;
+      preencherAvisos();
+      desenharPlanosSite();
+      $('site-carregando').classList.add('esconde');
+      $('site-conteudo').classList.remove('esconde');
+    } catch (err) {
+      siteCarregado = false;
+      $('site-carregando').textContent = err.message;
+    }
+  }
+  function marcarSite() { mudouSite = true; $('caixa-salvar-site').classList.toggle('esconde', !mudouSite); }
+
+  // faixa e pop-up
+  const CAMPOS_FAIXA = { texto: 'fx-texto', destino: 'fx-destino', inicio: 'fx-inicio', fim: 'fx-fim' };
+  const CAMPOS_POPUP = { titulo: 'pp-titulo', texto: 'pp-texto', imagem: 'pp-imagem', botao: 'pp-botao', destino: 'pp-destino', inicio: 'pp-inicio', fim: 'pp-fim' };
+  function preencherAvisos() {
+    for (const [k, id] of Object.entries(CAMPOS_FAIXA)) $(id).value = k === 'inicio' || k === 'fim' ? paraCampo(avisosSite.faixa[k]) : (avisosSite.faixa[k] || '');
+    for (const [k, id] of Object.entries(CAMPOS_POPUP)) $(id).value = k === 'inicio' || k === 'fim' ? paraCampo(avisosSite.popup[k]) : (avisosSite.popup[k] || '');
+    $('fx-ativo').checked = ativo(avisosSite.faixa);
+    $('pp-ativo').checked = ativo(avisosSite.popup);
+    desenharAvisos();
+  }
+  function lerAvisos() {
+    const f = { ativo: $('fx-ativo').checked ? 'sim' : 'nao' }, p = { ativo: $('pp-ativo').checked ? 'sim' : 'nao' };
+    for (const [k, id] of Object.entries(CAMPOS_FAIXA)) f[k] = $(id).value.trim();
+    for (const [k, id] of Object.entries(CAMPOS_POPUP)) p[k] = $(id).value.trim();
+    avisosSite = { faixa: f, popup: p };
+  }
+  function textoSituacao(a, vazio) {
+    if (!vazio) return { texto: 'Preencha para poder ligar', classe: '' };
+    const s = situacao(a);
+    return { texto: s.aparece ? (s.texto.replace('No app', 'No site')) : s.texto, classe: s.aparece ? 'no-ar' : '' };
+  }
+  function desenharAvisos() {
+    const f = avisosSite.faixa, p = avisosSite.popup;
+    const sf = textoSituacao(f, !!f.texto), sp = textoSituacao(p, !!(p.titulo || p.texto || p.imagem));
+    $('fx-situacao').textContent = sf.texto; $('fx-situacao').className = 'situacao-aviso ' + sf.classe;
+    $('pp-situacao').textContent = sp.texto; $('pp-situacao').className = 'situacao-aviso ' + sp.classe;
+    $('fx-previa').innerHTML = escapar(f.texto || 'O texto da faixa aparece aqui') + (f.destino ? ' <u>' + (ehLink(f.destino) ? 'Saiba mais' : 'Chamar no WhatsApp') + ' →</u>' : '');
+    $('pp-previa').innerHTML = (p.imagem ? `<img src="${escapar(p.imagem)}" alt="">` : '')
+      + `<div class="pp-topo"><small>Novidade</small><b>${escapar(p.titulo || 'Título do pop-up')}</b></div>`
+      + `<div class="pp-corpo">${escapar(p.texto || 'O texto aparece aqui.')}`
+      + `<span class="pp-botao">${escapar(p.botao || (ehLink(p.destino) ? 'Saiba mais' : 'Falar no WhatsApp'))}</span></div>`;
+    $('pp-upload').innerHTML = p.imagem ? '<b>Trocar imagem</b>' : '<b>Escolher imagem</b>';
+  }
+  ['fx-ativo', 'fx-texto', 'fx-destino', 'fx-inicio', 'fx-fim', 'pp-ativo', 'pp-titulo', 'pp-texto', 'pp-imagem', 'pp-botao', 'pp-destino', 'pp-inicio', 'pp-fim']
+    .forEach(id => $(id).addEventListener('input', () => { lerAvisos(); desenharAvisos(); marcarSite(); }));
+  ['fx-ativo', 'pp-ativo'].forEach(id => $(id).addEventListener('change', () => { lerAvisos(); desenharAvisos(); marcarSite(); }));
+  $('pp-upload').addEventListener('click', () => $('pp-arquivo').click());
+  $('pp-arquivo').addEventListener('change', async () => {
+    const arq = $('pp-arquivo').files[0];
+    $('pp-arquivo').value = '';
+    if (!arq) return;
+    if (!arq.type.startsWith('image/')) { aviso('Escolha um arquivo de imagem.', 'erro'); return; }
+    $('pp-upload').innerHTML = '<b>Enviando imagem…</b>';
+    try {
+      const d = await api('imagem', { base64: await reduzir(arq, 1200, 0.85) });
+      $('pp-imagem').value = d.url;
+      lerAvisos(); marcarSite();
+    } catch (err) { aviso(err.message, 'erro'); }
+    desenharAvisos();
+  });
+
+  // planos
+  function desenharPlanosSite() {
+    $('site-planos').innerHTML = GRUPOS_SITE.map(([g, titulo, pagina]) => {
+      const doGrupo = planosSite.map((p, i) => ({ p, i })).filter(x => x.p.grupo === g);
+      return `<div class="grupo-site"><div class="barra"><div><h3>${titulo}</h3><p class="dica">${pagina} · ${doGrupo.filter(x => ativo(x.p)).length} no site</p></div>
+        <button class="botao secundario pequeno" data-novo="${g}">＋ Plano</button></div>
+        <div class="planos-site">${doGrupo.length ? doGrupo.map(({ p, i }, n) => `
+          <div class="plano ${p.destaque ? 'destaque' : ''} ${ativo(p) ? '' : 'inativo'}">
+            ${p.destaque ? `<span class="selo-destaque">${escapar(p.destaque)}</span>` : ''}
+            <div class="plano-topo"><small>${escapar(p.nome)}</small>
+              <div class="vel">${escapar(p.velocidade)} <span>${escapar(p.unidade)}</span></div>
+              <div class="preco">${escapar(p.preco)} <small>${escapar(p.sufixo)}</small></div>
+              ${p.etiqueta ? `<span class="etq">${escapar(p.etiqueta)}</span>` : ''}</div>
+            <div class="acoes">
+              <button class="botao secundario pequeno olho ${ativo(p) ? '' : 'oculto'}" data-plano="olho" data-i="${i}" title="${ativo(p) ? 'No site. Toque para ocultar' : 'Oculto. Toque para mostrar'}">${ativo(p) ? '👁' : '🙈'}</button>
+              <button class="botao secundario pequeno" data-plano="subir" data-i="${i}" title="Para a esquerda" ${n === 0 ? 'disabled' : ''}>←</button>
+              <button class="botao secundario pequeno" data-plano="descer" data-i="${i}" title="Para a direita" ${n === doGrupo.length - 1 ? 'disabled' : ''}>→</button>
+              <button class="botao secundario pequeno" data-plano="editar" data-i="${i}">Editar</button>
+              <button class="botao perigo pequeno" data-plano="apagar" data-i="${i}" title="Apagar">🗑</button>
+            </div>
+          </div>`).join('') : '<div class="vazio" style="padding:20px">Nenhum plano. A página continua com o que já está escrito nela.</div>'}</div></div>`;
+    }).join('');
+  }
+  $('site-planos').addEventListener('click', e => {
+    const novo = e.target.closest('button[data-novo]');
+    if (novo) { abrirPlano(-1, novo.dataset.novo); return; }
+    const b = e.target.closest('button[data-plano]');
+    if (!b) return;
+    const i = Number(b.dataset.i), acao = b.dataset.plano, g = planosSite[i].grupo;
+    // vizinho do mesmo grupo (a lista guarda todos os grupos juntos)
+    const vizinho = passo => { for (let j = i + passo; j >= 0 && j < planosSite.length; j += passo) if (planosSite[j].grupo === g) return j; return -1; };
+    if (acao === 'subir' || acao === 'descer') {
+      const j = vizinho(acao === 'subir' ? -1 : 1);
+      if (j < 0) return;
+      [planosSite[i], planosSite[j]] = [planosSite[j], planosSite[i]];
+    } else if (acao === 'apagar') { if (!confirm(`Apagar o plano "${planosSite[i].nome}" do site?`)) return; planosSite.splice(i, 1); }
+    else if (acao === 'olho') planosSite[i] = { ...planosSite[i], ativo: ativo(planosSite[i]) ? 'nao' : 'sim' };
+    else if (acao === 'editar') { abrirPlano(i); return; }
+    marcarSite();
+    desenharPlanosSite();
+  });
+
+  const CAMPOS_PLANO = ['nome', 'velocidade', 'unidade', 'etiqueta', 'rotulo', 'preco', 'sufixo', 'destaque', 'botao', 'mensagem'];
+  function abrirPlano(i, grupo) {
+    editandoPlano = i;
+    rascunhoPlano = i >= 0 ? { ...planosSite[i] }
+      : { grupo, nome: '', velocidade: '', unidade: grupo === 'starlink' ? 'dias' : grupo === 'telefonia' ? 'ramais' : 'Mega', etiqueta: '', itens: [],
+          rotulo: 'A partir de', preco: '', sufixo: grupo === 'starlink' ? '' : '/mês', destaque: '', botao: 'Contratar', mensagem: '', ativo: 'sim' };
+    $('pl-modal-titulo').textContent = (i >= 0 ? 'Editar plano · ' : 'Novo plano · ') + GRUPOS_SITE.find(x => x[0] === rascunhoPlano.grupo)[1];
+    CAMPOS_PLANO.forEach(k => { $('pl-' + k).value = rascunhoPlano[k] || ''; });
+    $('pl-itens').value = (rascunhoPlano.itens || []).join('\n');
+    $('pl-ativo').checked = ativo(rascunhoPlano);
+    atualizarPlano();
+    $('modal-plano').classList.remove('esconde');
+    $('pl-nome').focus();
+  }
+  function atualizarPlano() {
+    CAMPOS_PLANO.forEach(k => { rascunhoPlano[k] = $('pl-' + k).value.trim(); });
+    rascunhoPlano.itens = $('pl-itens').value.split('\n').map(s => s.trim()).filter(Boolean);
+    rascunhoPlano.ativo = $('pl-ativo').checked ? 'sim' : 'nao';
+    const p = rascunhoPlano;
+    $('pl-previa').className = 'plano-previa' + (p.destaque ? ' destaque' : '');
+    $('pl-previa').innerHTML = (p.destaque ? `<span class="selo-destaque">${escapar(p.destaque)}</span>` : '')
+      + `<div class="nome">${escapar(p.nome || 'Nome do plano')}</div><div class="vel">${escapar(p.velocidade || '0')} <span>${escapar(p.unidade)}</span></div>`
+      + (p.etiqueta ? `<div class="etq">${escapar(p.etiqueta)}</div>` : '')
+      + `<ul>${p.itens.map(x => `<li>${escapar(x)}</li>`).join('')}</ul>`
+      + `<div class="rot">${escapar(p.rotulo)}</div><div class="valor">${escapar(p.preco || 'R$ 0,00')} <small>${escapar(p.sufixo)}</small></div>`
+      + `<span class="btn-previa">${escapar(p.botao || 'Contratar')}</span>`;
+  }
+  function fecharPlano() { $('modal-plano').classList.add('esconde'); }
+  [...CAMPOS_PLANO, 'itens', 'ativo'].forEach(k => $('pl-' + k).addEventListener('input', atualizarPlano));
+  $('pl-ativo').addEventListener('change', atualizarPlano);
+  $('pl-fechar').addEventListener('click', fecharPlano);
+  $('pl-cancelar').addEventListener('click', fecharPlano);
+  $('modal-plano').addEventListener('click', e => { if (e.target.id === 'modal-plano') fecharPlano(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('modal-plano').classList.contains('esconde')) fecharPlano(); });
+  $('pl-ok').addEventListener('click', () => {
+    atualizarPlano();
+    if (!rascunhoPlano.nome) { aviso('Coloque o nome do plano.', 'erro'); return; }
+    if (!rascunhoPlano.preco) { aviso('Coloque o preço (ou "Sob consulta").', 'erro'); return; }
+    if (editandoPlano >= 0) planosSite[editandoPlano] = rascunhoPlano;
+    else {
+      // entra no fim do grupo dele
+      let fim = -1;
+      planosSite.forEach((p, j) => { if (p.grupo === rascunhoPlano.grupo) fim = j; });
+      planosSite.splice(fim >= 0 ? fim + 1 : planosSite.length, 0, rascunhoPlano);
+    }
+    fecharPlano();
+    marcarSite();
+    desenharPlanosSite();
+    aviso('Pronto. Clique em "Publicar no site" para colocar no ar.');
+  });
+
+  $('btn-salvar-site').addEventListener('click', async () => {
+    lerAvisos();
+    const { faixa, popup } = avisosSite;
+    if (faixa.ativo === 'sim' && !faixa.texto) { aviso('A faixa está ligada mas sem texto.', 'erro'); return; }
+    if (popup.ativo === 'sim' && !(popup.titulo || popup.texto || popup.imagem)) { aviso('O pop-up está ligado mas está vazio.', 'erro'); return; }
+    if (popup.imagem && !/^https:\/\//i.test(popup.imagem)) { aviso('O endereço da imagem precisa começar com https://', 'erro'); return; }
+    for (const a of [faixa, popup]) if (a.inicio && a.fim && a.fim <= a.inicio) { aviso('A data final precisa ser depois da inicial.', 'erro'); return; }
+    if (!confirm('Publicar as mudanças no site?')) return;
+    $('btn-salvar-site').disabled = true;
+    try {
+      const d = await api('salvar_site', { planos: planosSite, avisos: avisosSite });
+      mudouSite = false;
+      $('caixa-salvar-site').classList.add('esconde');
+      aviso(`Site atualizado (${d.planos} planos). Aparece em até 1 minuto.`, 'ok');
+      carregarSite();
+    } catch (err) { aviso(err.message, 'erro'); }
+    $('btn-salvar-site').disabled = false;
+  });
+
+  // ---------- app: contatos, tema, aviso, funções, perguntas e versão ----------
+  // o que o app já traz de fábrica: aparece aqui enquanto a planilha estiver vazia
+  const PADRAO_APP = {
+    whatsapp: '5561991853932', telefone: 'TROCAR_TELEFONE_SO_NUMEROS', telefone_exibir: 'TROCAR_TELEFONE_COMO_APARECE', instagram: 'infinytnet',
+    facebook: 'TROCAR_LINK_FACEBOOK', horario: 'Seg–Sex: 8h–19h • Sáb: 9h–16h',
+    endereco: 'TROCAR_ENDERECO', portal: 'https://www.portaldoassinante.com/infinyt',
+    faq: [
+      { q: 'Minha internet está lenta, o que fazer?', a: 'Reinicie o roteador desligando e ligando novamente. Aguarde 2 minutos. Você também pode usar a aba Velocidade do app para testar sua conexão. Se persistir, abra um chamado técnico ou fale no WhatsApp.' },
+      { q: 'Estou sem conexão, e agora?', a: 'Verifique se as luzes do roteador estão acesas e reinicie o aparelho. Se você estiver com fatura em aberto, use o Desbloqueio de Confiança no app para liberar na hora. Persistindo, fale com o suporte.' },
+      { q: 'Como faço a 2ª via do meu boleto?', a: 'Na aba Boleto do app você vê todas as suas faturas e pode copiar a linha digitável ou abrir o boleto.' },
+    ],
+  };
+  const FUNCOES = [
+    ['desbloqueio', 'Desbloqueio de confiança', 'Botão de liberar a conexão com fatura em aberto'],
+    ['wifi', 'Meu Wi-Fi', 'Trocar nome e senha do Wi-Fi'],
+    ['consumo', 'Consumo', 'Gráfico de uso da internet no mês'],
+    ['velocidade', 'Teste de velocidade', 'Aba Velocidade'],
+    ['apps', 'Meus Apps', 'Portal do Assinante (streaming e benefícios)'],
+    ['notas', 'Notas fiscais', 'Dentro da tela de Boleto'],
+  ];
+  const CORES_TEMA = [['Laranja Infinyt', '#F47B20'], ['Outubro Rosa', '#E91E63'], ['Novembro Azul', '#1E88E5'], ['Natal', '#E53935'], ['Verde', '#16A34A'], ['Roxo', '#7E57C2']];
+  const CAMPOS_APP = ['whatsapp', 'telefone', 'telefone_exibir', 'instagram', 'facebook', 'horario', 'endereco', 'portal',
+    'tema_nome', 'tema_inicio', 'tema_fim', 'aviso_texto', 'aviso_tipo', 'aviso_link', 'aviso_inicio', 'aviso_fim', 'versao_minima', 'versao_atual', 'versao_texto'];
+  let appCarregado = false, mudouApp = false, faqApp = [], desligados = [];
+  const foneBonito = d => { d = String(d || '').replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, ''); return d.length >= 10 ? `(${d.slice(0, 2)}) ${d.slice(2, -4)}-${d.slice(-4)}` : d; };
+  // cor mais clara/escura a partir da escolhida (mesma conta que o app faz)
+  const misturar = (hex, alvo, p) => { const n = parseInt(hex.slice(1), 16), a = [n >> 16, (n >> 8) & 255, n & 255]; return '#' + a.map(v => Math.round(v + (alvo - v) * p).toString(16).padStart(2, '0')).join(''); };
+
+  async function carregarApp() {
+    appCarregado = true;
+    try {
+      const { config: c } = await api('app_config');
+      const vazio = !c.whatsapp; // planilha ainda vazia: começa com o que o app já usa
+      for (const k of CAMPOS_APP) $('ap-' + k).value = (k.endsWith('_inicio') || k.endsWith('_fim')) ? paraCampo(c[k]) : (c[k] || (vazio ? PADRAO_APP[k] || '' : ''));
+      $('ap-whatsapp').value = foneBonito($('ap-whatsapp').value);
+      $('ap-telefone').value = foneBonito($('ap-telefone').value);
+      $('ap-aviso_tipo').value = c.aviso_tipo || 'info';
+      $('ap-tema_cor').value = c.tema_cor || '#E91E63';
+      $('ap-tema_ativo').checked = c.tema_ativo === 'sim';
+      $('ap-aviso_ativo').checked = c.aviso_ativo === 'sim';
+      let faq = [];
+      try { faq = JSON.parse(c.faq || '[]'); } catch (e) { faq = []; }
+      faqApp = faq.length || !vazio ? faq : PADRAO_APP.faq.map(x => ({ ...x }));
+      desligados = c.desligados ? c.desligados.split(',') : [];
+      mudouApp = vazio; // primeira vez: deixa o botão de publicar à mostra para gravar o padrão
+      $('caixa-salvar-app').classList.toggle('esconde', !mudouApp);
+      desenharApp();
+      $('app-carregando').classList.add('esconde');
+      $('app-conteudo').classList.remove('esconde');
+    } catch (err) { appCarregado = false; $('app-carregando').textContent = err.message; }
+  }
+  function marcarApp() { mudouApp = true; $('caixa-salvar-app').classList.remove('esconde'); }
+  function desenharApp() { previasApp(); listasApp(); }
+  // prévias do tema e do aviso: redesenha a cada tecla (não mexe nos campos, então o cursor não pula)
+  function previasApp() {
+    const cor = $('ap-tema_cor').value.toUpperCase();
+    $('ap-cores').innerHTML = CORES_TEMA.map(([n, c]) => `<button type="button" data-cor="${c}" data-nome="${n}" class="${c === cor ? 'sel' : ''}"><i style="background:${c}"></i>${n}</button>`).join('');
+    const tema = { ativo: $('ap-tema_ativo').checked ? 'sim' : 'nao', inicio: $('ap-tema_inicio').value, fim: $('ap-tema_fim').value };
+    const st = situacao(tema);
+    $('ap-tema-situacao').textContent = st.aparece ? 'No app agora' + (tema.fim ? ' até ' + dataCurta(tema.fim) : '') : st.texto === 'Oculto' ? 'Desligado: o app segue amarelo. Ligue a chave para usar esta cor.' : st.texto;
+    $('ap-tema-situacao').className = 'situacao-aviso ' + (st.aparece ? 'no-ar' : '');
+    const c = cor; // a prévia mostra a cor escolhida mesmo com o tema desligado
+    $('ap-mini').innerHTML = `<div class="ma-topo" style="background:linear-gradient(170deg,${misturar(c, 255, .35)},${c})"><small>Olá,</small><b>Maria!</b></div>
+      <div style="background:linear-gradient(180deg,${c},${c})"><div class="ma-card"><div style="font-size:22px">✅</div><b>Tudo certo</b>
+      <div class="ma-btn" style="background:linear-gradient(135deg,${c},${misturar(c, 255, .2)})">Ver fatura →</div></div>
+      <div class="ma-atalhos"><span>💳</span><span>🔓</span><span>📶</span><span>💬</span></div></div>`;
+    const av = { ativo: $('ap-aviso_ativo').checked ? 'sim' : 'nao', inicio: $('ap-aviso_inicio').value, fim: $('ap-aviso_fim').value };
+    const sa = situacao(av);
+    $('ap-aviso-situacao').textContent = sa.aparece ? 'No app agora' + (av.fim ? ' até ' + dataCurta(av.fim) : '') : sa.texto === 'Oculto' ? 'Desligado' : sa.texto;
+    $('ap-aviso-situacao').className = 'situacao-aviso ' + (sa.aparece ? 'no-ar' : '');
+    const tipo = $('ap-aviso_tipo').value;
+    $('ap-aviso-previa').className = 'aviso-app ' + tipo;
+    $('ap-aviso-previa').innerHTML = `<span>${{ info: 'ℹ️', alerta: '⚠️', sucesso: '✅' }[tipo]}</span><span>${escapar($('ap-aviso_texto').value || 'O aviso aparece assim no topo do app')}</span>`;
+  }
+  function listasApp() {
+    $('ap-funcoes').innerHTML = FUNCOES.map(([k, n, d]) => `<label><span>${n}<small>${d}</small></span>
+      <span class="chave"><input type="checkbox" data-funcao="${k}" ${desligados.includes(k) ? '' : 'checked'}><i></i></span></label>`).join('');
+    $('ap-faq').innerHTML = faqApp.map((f, i) => `<div class="faq-item">
+      <input type="text" maxlength="120" data-faq="${i}" data-campo="q" value="${escapar(f.q)}" placeholder="Pergunta">
+      <textarea maxlength="600" data-faq="${i}" data-campo="a" placeholder="Resposta">${escapar(f.a)}</textarea>
+      <div class="acoes">
+        <button class="botao secundario pequeno" type="button" data-faq-mover="-1" data-i="${i}" ${i === 0 ? 'disabled' : ''}>↑</button>
+        <button class="botao secundario pequeno" type="button" data-faq-mover="1" data-i="${i}" ${i === faqApp.length - 1 ? 'disabled' : ''}>↓</button>
+        <button class="botao perigo pequeno" type="button" data-faq-apagar="${i}">🗑</button></div></div>`).join('') || '<p class="dica">Nenhuma pergunta. O app mostra as perguntas de fábrica.</p>';
+  }
+  CAMPOS_APP.concat(['tema_cor', 'tema_ativo', 'aviso_ativo']).forEach(k => {
+    $('ap-' + k).addEventListener('input', () => { marcarApp(); previasApp(); });
+    $('ap-' + k).addEventListener('change', () => { marcarApp(); previasApp(); });
+  });
+  $('ap-cores').addEventListener('click', e => {
+    const b = e.target.closest('button[data-cor]');
+    if (!b) return;
+    $('ap-tema_cor').value = b.dataset.cor;
+    if (!$('ap-tema_nome').value || CORES_TEMA.some(([n]) => n === $('ap-tema_nome').value)) $('ap-tema_nome').value = b.dataset.nome;
+    marcarApp(); previasApp();
+  });
+  $('ap-funcoes').addEventListener('change', e => {
+    const k = e.target.dataset.funcao;
+    if (!k) return;
+    desligados = e.target.checked ? desligados.filter(x => x !== k) : [...new Set([...desligados, k])];
+    marcarApp();
+  });
+  $('ap-faq').addEventListener('input', e => {
+    const i = e.target.dataset.faq;
+    if (i == null) return;
+    faqApp[Number(i)][e.target.dataset.campo] = e.target.value;
+    marcarApp();
+  });
+  $('ap-faq').addEventListener('click', e => {
+    const mover = e.target.closest('button[data-faq-mover]'), apagar = e.target.closest('button[data-faq-apagar]');
+    if (mover) { const i = Number(mover.dataset.i), j = i + Number(mover.dataset.faqMover); [faqApp[i], faqApp[j]] = [faqApp[j], faqApp[i]]; }
+    else if (apagar) { if (!confirm('Apagar esta pergunta?')) return; faqApp.splice(Number(apagar.dataset.faqApagar), 1); }
+    else return;
+    marcarApp(); listasApp();
+  });
+  $('ap-faq-nova').addEventListener('click', () => {
+    faqApp.push({ q: '', a: '' }); marcarApp(); listasApp();
+    const campos = $('ap-faq').querySelectorAll('input[data-campo=q]');
+    campos[campos.length - 1].focus();
+  });
+
+  $('btn-salvar-app').addEventListener('click', async () => {
+    const config = Object.fromEntries(CAMPOS_APP.map(k => [k, $('ap-' + k).value.trim()]));
+    Object.assign(config, {
+      tema_cor: $('ap-tema_cor').value.toUpperCase(), tema_ativo: $('ap-tema_ativo').checked ? 'sim' : 'nao',
+      aviso_ativo: $('ap-aviso_ativo').checked ? 'sim' : 'nao', desligados: desligados.join(','),
+      faq: faqApp.map(f => ({ q: String(f.q || '').trim(), a: String(f.a || '').trim() })).filter(f => f.q || f.a),
+    });
+    if (config.faq.some(f => !f.q || !f.a)) { aviso('Toda pergunta precisa de resposta (ou apague a pergunta).', 'erro'); return; }
+    if (String(config.whatsapp).replace(/\D/g, '').length < 10) { aviso('Coloque o WhatsApp com DDD.', 'erro'); return; }
+    if (config.aviso_ativo === 'sim' && !config.aviso_texto) { aviso('O aviso está ligado mas sem texto.', 'erro'); return; }
+    for (const p of ['tema', 'aviso']) if (config[p + '_inicio'] && config[p + '_fim'] && config[p + '_fim'] <= config[p + '_inicio']) { aviso('A data final precisa ser depois da inicial.', 'erro'); return; }
+    if (config.versao_minima && config.versao_atual && Number(config.versao_minima) > Number(config.versao_atual)) { aviso('A versão mínima não pode ser maior que a mais nova.', 'erro'); return; }
+    const bloqueia = config.versao_minima ? `\n\n⚠️ Quem tiver versão abaixo de ${config.versao_minima} só vai conseguir usar o app depois de atualizar.` : '';
+    if (!confirm('Publicar as configurações no app dos clientes?' + bloqueia)) return;
+    $('btn-salvar-app').disabled = true;
+    try {
+      await api('salvar_app_config', { config });
+      mudouApp = false;
+      $('caixa-salvar-app').classList.add('esconde');
+      aviso('App atualizado. Os clientes veem na próxima vez que abrirem o app.', 'ok');
+      carregarApp();
+    } catch (err) { aviso(err.message, 'erro'); }
+    $('btn-salvar-app').disabled = false;
+  });
+
+  // entra direto se a senha já foi digitada nesta aba
+  // entra direto se o login foi feito neste navegador nos últimos 7 dias
+  try {
+    const l = JSON.parse(localStorage.getItem('painel-login') || 'null');
+    if (l && l.senha && l.ate > Date.now()) {
+      senha = l.senha;
+      // enquanto confere o login guardado, não parece que está pedindo a senha de novo
+      $('btn-entrar').disabled = true; $('btn-entrar').textContent = 'Entrando…';
+      api('login').then(entrar).catch(() => {}).finally(() => { $('btn-entrar').disabled = false; $('btn-entrar').textContent = 'Entrar'; });
+    }
+    else localStorage.removeItem('painel-login');
+  } catch (e) { /* ignora */ }
+})();
+</script>
+</body>
+</html>
