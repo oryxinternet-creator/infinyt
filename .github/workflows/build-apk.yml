@@ -1,5 +1,6 @@
 name: Build APK
 
+# Roda quando você faz push na branch main, ou manualmente pelo botão "Run workflow"
 on:
   push:
     branches: [ main ]
@@ -26,26 +27,29 @@ jobs:
       - name: Adicionar plataforma Android (Capacitor)
         run: npx cap add android
 
-      - name: Ajustar minSdk para 26
+      - name: Ajustar minSdk para 26 (WebView nativa)
         run: sed -i -E 's/minSdkVersion = [0-9]+/minSdkVersion = 26/' android/variables.gradle
 
-      - name: Ajustar SDK 35 + AGP/Gradle
+      - name: Ajustar SDK de destino para 35 + AGP/Gradle
         run: |
-          sed -i -E 's/compileSdkVersion = [0-9]+/compileSdkVersion = 35/; s/targetSdkVersion = [0-9]+/targetSdkVersion = 35/' android/variables.gradle
-          sed -i 's/com.android.tools.build:gradle:8.2.1/com.android.tools.build:gradle:8.6.1/' android/build.gradle
-          sed -i 's#gradle-8.2.1-all.zip#gradle-8.7-all.zip#' android/gradle/wrapper/gradle-wrapper.properties
+          sed -i -E 's/compileSdkVersion = [0-9]+/compileSdkVersion = 36/; s/targetSdkVersion = [0-9]+/targetSdkVersion = 36/' android/variables.gradle
+          sed -i 's/com.android.tools.build:gradle:8.2.1/com.android.tools.build:gradle:8.9.1/' android/build.gradle
+          sed -i 's#gradle-8.2.1-all.zip#gradle-8.11.1-all.zip#' android/gradle/wrapper/gradle-wrapper.properties
 
       - name: Definir versionCode unico
         run: sed -i -E "s/versionCode [0-9]+/versionCode ${{ github.run_number }}/" android/app/build.gradle
 
-      - name: Copiar google-services.json
+      - name: Copiar google-services.json (Firebase)
         run: cp google-services.json android/app/google-services.json
 
-      - name: Permissao de notificacao (Android 13+)
+      - name: Adicionar permissao de notificacao (Android 13+)
         run: |
           sed -i 's#<uses-permission android:name="android.permission.INTERNET" />#<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />#' android/app/src/main/AndroidManifest.xml
 
-      - name: Aplicar icone da Infinyt
+      - name: Liberar HTTP local (acesso ao modem)
+        run: sed -i 's/<application/<application android:usesCleartextTraffic="true"/' android/app/src/main/AndroidManifest.xml
+
+      - name: Aplicar icone da Infinyt (logo)
         run: |
           for d in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
             mkdir -p android/app/src/main/res/mipmap-$d
@@ -60,7 +64,7 @@ jobs:
           cp app-icons/ic_launcher.xml android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
           rm -f android/app/src/main/res/drawable*/ic_launcher_foreground.xml || true
 
-      - name: Sincronizar com Android
+      - name: Sincronizar build com o Android
         run: npx cap sync android
 
       - name: Configurar Java (JDK 17)
