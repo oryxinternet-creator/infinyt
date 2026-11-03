@@ -589,7 +589,7 @@
     <div class="modal-corpo">
       <div>
         <label class="campo"><span>Imagem (opcional)</span>
-          <div class="upload" id="upload"><b>Escolher imagem</b><br>JPG ou PNG. Com imagem, o anúncio mostra só a imagem.</div>
+          <div class="upload" id="upload"><b>Escolher imagem</b><br>JPG ou PNG. Com imagem, o app mostra a imagem e o botão por cima (se tiver link e texto do botão).</div>
           <input type="file" id="arquivo" accept="image/*" class="esconde">
         </label>
         <div id="caixa-remover-img" class="esconde" style="margin:-6px 0 14px"><button class="botao perigo pequeno" type="button" id="btn-remover-img">Remover imagem</button></div>
@@ -669,7 +669,7 @@
   }
 
   function previa(a) {
-    if (a.imagem) return `<img src="${escapar(a.imagem)}" alt="">`;
+    if (a.imagem) return `<div style="position:relative"><img src="${escapar(a.imagem)}" alt="">${a.destino && a.botao ? `<div class="cta" style="position:absolute;left:14px;bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.35)">${escapar(a.botao)} →</div>` : ''}</div>`;
     return `<div class="cartao-app" style="background:linear-gradient(140deg,${escapar(a.cor || '#0E2A5E')},#1a1c4e)">
       <div class="bola"></div><div class="selo">PROMOÇÃO</div>
       <div class="titulo">${escapar(a.titulo || 'Título do anúncio')}</div>
