@@ -198,7 +198,7 @@
     fundo.innerHTML = '<div class="lead-box" role="dialog" aria-modal="true" aria-labelledby="novidadeTitulo">' +
       '<button type="button" class="lead-fechar" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
       (p.imagem && /^https:\/\//i.test(p.imagem) ? '<div class="novidade-img" style="--img:url(&quot;' + esc(p.imagem) + '&quot;)"><img src="' + esc(p.imagem) + '" alt=""></div>' : "") +
-      '<div class="lead-topo"><span class="lead-eyebrow">Novidade Infinyt</span><h2 id="novidadeTitulo">' + esc(p.titulo || "Novidade") + "</h2></div>" +
+      (p.titulo ? '<div class="lead-topo"><span class="lead-eyebrow">Novidade Infinyt</span><h2 id="novidadeTitulo">' + esc(p.titulo) + "</h2></div>" : "") +
       '<div class="novidade-corpo">' + (p.texto ? "<p>" + esc(p.texto) + "</p>" : "") +
       botao("btn-green", p.botao || (ehLink(p.destino) ? "Saiba mais" : "Falar no WhatsApp"), p.destino) + "</div></div>";
     document.body.appendChild(fundo);

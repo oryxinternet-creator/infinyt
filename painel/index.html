@@ -1195,7 +1195,7 @@
     $('pp-situacao').textContent = sp.texto; $('pp-situacao').className = 'situacao-aviso ' + sp.classe;
     $('fx-previa').innerHTML = escapar(f.texto || 'O texto da faixa aparece aqui') + (f.destino ? ' <u>' + (ehLink(f.destino) ? 'Saiba mais' : 'Chamar no WhatsApp') + ' →</u>' : '');
     $('pp-previa').innerHTML = (p.imagem ? `<div style="position:relative;overflow:hidden;background:#0E2A5E"><div style="position:absolute;inset:-24px;background:url('${escapar(p.imagem)}') center/cover;filter:blur(18px);opacity:.75"></div><img src="${escapar(p.imagem)}" alt="" style="position:relative;width:100%;height:auto;max-height:55vh;display:block;object-fit:contain"></div>` : '')
-      + `<div class="pp-topo"><small>Novidade</small><b>${escapar(p.titulo || 'Título do pop-up')}</b></div>`
+      + (p.titulo ? `<div class="pp-topo"><small>Novidade</small><b>${escapar(p.titulo)}</b></div>` : '')
       + `<div class="pp-corpo">${escapar(p.texto || 'O texto aparece aqui.')}`
       + `<span class="pp-botao">${escapar(p.botao || (ehLink(p.destino) ? 'Saiba mais' : 'Falar no WhatsApp'))}</span></div>`;
     $('pp-upload').innerHTML = p.imagem ? '<b>Trocar imagem</b>' : '<b>Escolher imagem</b>';
